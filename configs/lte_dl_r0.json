@@ -1,0 +1,6 @@
+{
+  "Protocol": "lte_dl",
+  "RC": "R.0",
+  "NumSubframes": 10,
+  "Seed": 42
+}

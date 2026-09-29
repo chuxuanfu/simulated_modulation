@@ -1,0 +1,7 @@
+{
+  "Protocol": "nr_dl",
+  "BandwidthMHz": 20,
+  "SubcarrierSpacingKHz": 30,
+  "NSizeGrid": 51,
+  "Seed": 42
+}

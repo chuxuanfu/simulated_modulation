@@ -1,0 +1,92 @@
+{
+  "execution": "Python/NumPy reference implementation; NOT MATLAB execution",
+  "numpy_version": "2.5.3",
+  "tests": [
+    {
+      "name": "16QAM full-alphabet unit energy",
+      "status": "PASS",
+      "observed": 1.0,
+      "criterion": "abs(E-1)<1e-12"
+    },
+    {
+      "name": "64QAM full-alphabet unit energy",
+      "status": "PASS",
+      "observed": 1.0000000000000002,
+      "criterion": "abs(E-1)<1e-12"
+    },
+    {
+      "name": "256QAM full-alphabet unit energy",
+      "status": "PASS",
+      "observed": 0.9999999999999998,
+      "criterion": "abs(E-1)<1e-12"
+    },
+    {
+      "name": "RRC matched-filter residual EVM",
+      "status": "PASS",
+      "observed": 0.20177910624309156,
+      "criterion": "<1 percent"
+    },
+    {
+      "name": "OFDM inversion spread=False",
+      "status": "PASS",
+      "observed": 8.005932084973443e-16,
+      "criterion": "<1e-12"
+    },
+    {
+      "name": "OFDM inversion spread=True",
+      "status": "PASS",
+      "observed": 1.2008898127460164e-15,
+      "criterion": "<1e-12"
+    },
+    {
+      "name": "CP=32, path delay=8 samples",
+      "status": "PASS",
+      "observed": 2.60973385734323e-14,
+      "criterion": "<1e-9%"
+    },
+    {
+      "name": "CP=32, path delay=48 samples",
+      "status": "PASS",
+      "observed": 12.649427602688226,
+      "criterion": ">1%"
+    },
+    {
+      "name": "Half-sine OQPSK envelope",
+      "status": "PASS",
+      "observed": 2.220446049250313e-16,
+      "criterion": "<1e-12"
+    },
+    {
+      "name": "CRC-16/KERMIT known answer",
+      "status": "PASS",
+      "observed": 8585.0,
+      "criterion": "0x2189"
+    },
+    {
+      "name": "CRC complete-frame residue",
+      "status": "PASS",
+      "observed": 0.0,
+      "criterion": "0"
+    },
+    {
+      "name": "BPSK Eb/N0=0dB BER",
+      "status": "PASS",
+      "observed": 0.07893,
+      "criterion": "within 0.003 of 0.0786496"
+    },
+    {
+      "name": "Welch power integration",
+      "status": "PASS",
+      "observed": 1.0,
+      "criterion": "abs(P-1)<1e-10"
+    },
+    {
+      "name": "Int16 IQ quantization error",
+      "status": "PASS",
+      "observed": 1.7060365440074817e-05,
+      "criterion": "<=sqrt(2)/32767"
+    }
+  ],
+  "passed": 14,
+  "failed": 0
+}

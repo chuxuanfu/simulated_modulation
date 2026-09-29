@@ -1,0 +1,6 @@
+{
+  "Protocol": "wifi_ht",
+  "BandwidthMHz": 20,
+  "MCS": 0,
+  "Seed": 42
+}

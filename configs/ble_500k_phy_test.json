@@ -1,0 +1,8 @@
+{
+  "Protocol": "ble",
+  "Mode": "LE500K",
+  "PayloadKind": "phy-test",
+  "ChannelIndex": 0,
+  "CenterFrequencyHz": 2404000000.0,
+  "Seed": 42
+}

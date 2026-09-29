@@ -1,0 +1,330 @@
+[
+  {
+    "id": "MW01",
+    "title": "nrWaveformGenerator",
+    "url": "https://www.mathworks.com/help/5g/ref/nrwaveformgenerator.html",
+    "purpose": "NR 上/下行生成、输出资源格与实际采样率",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "MW02",
+    "title": "nrDLCarrierConfig",
+    "url": "https://www.mathworks.com/help/5g/ref/nrdlcarrierconfig.html",
+    "purpose": "下行载波/BWP/信道配置",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "MW03",
+    "title": "nrULCarrierConfig",
+    "url": "https://www.mathworks.com/help/5g/ref/nrulcarrierconfig.html",
+    "purpose": "上行载波配置",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "MW04",
+    "title": "nrWavegenPDSCHConfig",
+    "url": "https://www.mathworks.com/help/5g/ref/nrwavegenpdschconfig.html",
+    "purpose": "PDSCH 调制、码率、资源分配和 DataSource",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "MW05",
+    "title": "nrWavegenPUSCHConfig",
+    "url": "https://www.mathworks.com/help/5g/ref/nrwavegenpuschconfig.html",
+    "purpose": "PUSCH 与 TransformPrecoding",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "MW06",
+    "title": "5G NR Downlink Vector Waveform Generation",
+    "url": "https://www.mathworks.com/help/5g/ug/downlink-carrier-waveform-generation.html",
+    "purpose": "扩展到 SSB/PDCCH/多 BWP 的官方完整例程",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "MW07",
+    "title": "nrPDSCHDecode",
+    "url": "https://www.mathworks.com/help/5g/ref/nrpdschdecode.html",
+    "purpose": "符号解映射/解扰；不是 LDPC 传输块解码器",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "MW08",
+    "title": "nrOFDMDemodulate",
+    "url": "https://www.mathworks.com/help/5g/ref/nrofdmdemodulate.html",
+    "purpose": "资源格恢复与采样率设置",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "MW09",
+    "title": "lteRMCDLTool",
+    "url": "https://www.mathworks.com/help/lte/ref/ltermcdltool.html",
+    "purpose": "LTE 下行参考波形",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "MW10",
+    "title": "lteRMCULTool",
+    "url": "https://www.mathworks.com/help/lte/ref/ltermcultool.html",
+    "purpose": "LTE 上行参考波形与 SamplingRate",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "MW11",
+    "title": "wlanWaveformGenerator",
+    "url": "https://www.mathworks.com/help/wlan/ref/wlanwaveformgenerator.html",
+    "purpose": "PPDU 生成，包数/空闲/过采样",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "MW12",
+    "title": "WLAN Waveform Generation",
+    "url": "https://www.mathworks.com/help/wlan/gs/waveform-generation.html",
+    "purpose": "不同 Wi-Fi 代际的官方起步例程",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "MW13",
+    "title": "wlanHESUConfig",
+    "url": "https://www.mathworks.com/help/wlan/ref/wlanhesuconfig.html",
+    "purpose": "HE SU 与 APEP/MCS",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "MW14",
+    "title": "wlanVHTConfig",
+    "url": "https://www.mathworks.com/help/wlan/ref/wlanvhtconfig.html",
+    "purpose": "VHT、空间流、PSDULength",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "MW15",
+    "title": "wlanEHTMUConfig",
+    "url": "https://www.mathworks.com/help/wlan/ref/wlanehtmuconfig.html",
+    "purpose": "EHT 单/多用户配置",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "MW16",
+    "title": "wlanEHTUser",
+    "url": "https://www.mathworks.com/help/wlan/ref/wlanehtuser.html",
+    "purpose": "每用户的 MCS/APEP/空间流",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "MW17",
+    "title": "802.11be Waveform Generation",
+    "url": "https://www.mathworks.com/help/wlan/ug/802-11be-waveform-generation.html",
+    "purpose": "EHT RU/MRU 与 MIMO 示例，注意其引用标准版本",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "MW18",
+    "title": "getPSDULength",
+    "url": "https://www.mathworks.com/help/wlan/ref/wlanhesuconfig.getpsdulength.html",
+    "purpose": "HE 实际 PSDU 长度",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "MW19",
+    "title": "wlanNonHTDataRecover",
+    "url": "https://www.mathworks.com/help/wlan/ref/wlannonhtdatarecover.html",
+    "purpose": "non-HT 位恢复；第二个输出为均衡符号",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "MW20",
+    "title": "wlanHEMUConfig",
+    "url": "https://www.mathworks.com/help/wlan/ref/wlanhemuconfig.html",
+    "purpose": "HE OFDMA 资源分配",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "MW21",
+    "title": "bleWaveformGenerator",
+    "url": "https://www.mathworks.com/help/bluetooth/ref/blewaveformgenerator.html",
+    "purpose": "BLE PHY，输入包含 PDU 与 CRC；速率/白化参数",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "MW22",
+    "title": "bleIdealReceiver",
+    "url": "https://www.mathworks.com/help/bluetooth/ref/bleidealreceiver.html",
+    "purpose": "理想同步 BLE 接收",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "MW23",
+    "title": "bleLLAdvertisingChannelPDU",
+    "url": "https://www.mathworks.com/help/bluetooth/ref/blelladvertisingchannelpdu.html",
+    "purpose": "广播 PDU 生成",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "MW24",
+    "title": "Bluetooth LE Link Layer Packet Generation and Decoding",
+    "url": "https://www.mathworks.com/help/bluetooth/ug/bluetooth-le-link-layer-packet-generation-and-decoding.html",
+    "purpose": "LL 生成/校验流程",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "MW25",
+    "title": "Bluetooth LE Waveform Generation and Transmission Using SDR",
+    "url": "https://www.mathworks.com/help/bluetooth/ug/bluetooth-low-energy-transmitter.html",
+    "purpose": "官方发送流程；采样率计算及 LL 输出接 PHY",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "MW26",
+    "title": "bluetoothWaveformGenerator",
+    "url": "https://www.mathworks.com/help/bluetooth/ref/bluetoothwaveformgenerator.html",
+    "purpose": "BR/EDR 包生成",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "MW27",
+    "title": "bluetoothWaveformConfig",
+    "url": "https://www.mathworks.com/help/bluetooth/ref/bluetoothwaveformconfig.html",
+    "purpose": "BR/EDR 合法模式、包型与长度",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "MW28",
+    "title": "bluetoothIdealReceiver",
+    "url": "https://www.mathworks.com/help/bluetooth/ref/bluetoothidealreceiver.html",
+    "purpose": "后续经典蓝牙接收扩展入口",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "MW29",
+    "title": "lrwpanWaveformGenerator",
+    "url": "https://www.mathworks.com/help/comm/ref/lrwpanwaveformgenerator.html",
+    "purpose": "IEEE 802.15.4 OQPSK/UWB 波形入口，R2023a 起",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "MW30",
+    "title": "lrwpanOQPSKConfig",
+    "url": "https://www.mathworks.com/help/comm/ref/lrwpanoqpskconfig.html",
+    "purpose": "Band、SamplesPerChip、PSDULength、SampleRate",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "MW31",
+    "title": "Wireless Waveform Generator",
+    "url": "https://www.mathworks.com/help/comm/ref/wirelesswaveformgenerator-app.html",
+    "purpose": "图形 App、协议工具箱依赖、导出",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "MW32",
+    "title": "Create Waveforms Using Wireless Waveform Generator App",
+    "url": "https://www.mathworks.com/help/comm/ug/create-waveforms-using-wireless-waveform-generator-app.html",
+    "purpose": "App 操作路线",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "ST01",
+    "title": "3GPP TS 38.211 / ETSI 138 211 V18.4.0",
+    "url": "https://www.etsi.org/deliver/etsi_ts/138200_138299/138211/18.04.00_60/",
+    "purpose": "公开 NR 物理信道与调制规范目录；固定版本参考，非宣称最新版",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "ST02",
+    "title": "Bluetooth Core 6.2 LE Radio Physical Layer",
+    "url": "https://www.bluetooth.com/wp-content/uploads/Files/Specification/HTML/Core-62/out/en/low-energy-controller/radio-physical-layer-specification.html",
+    "purpose": "LE 物理层参数；具体实验按目标 Core 版本固定",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "ST03",
+    "title": "Bluetooth LE Primer",
+    "url": "https://www.bluetooth.com/bluetooth-le-primer/",
+    "purpose": "Bluetooth SIG 官方原理入门",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "ST04",
+    "title": "OpenThread Primer",
+    "url": "https://openthread.io/guides/thread-primer",
+    "purpose": "Thread 网络与 PHY 的层次关系",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "ST05",
+    "title": "OpenThread radio.h",
+    "url": "https://github.com/openthread/openthread/blob/main/include/openthread/platform/radio.h",
+    "purpose": "250 kbit/s、信道 11–26 等实现常量",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "ST06",
+    "title": "OpenThread Porting Guide",
+    "url": "https://openthread.io/guides/porting",
+    "purpose": "从 PHY 实验扩展到真实协议栈",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "ST07",
+    "title": "SigMF Specification",
+    "url": "https://sigmf.org/",
+    "purpose": "IQ 数据类型、端序和元数据结构",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "MW33",
+    "title": "wlanHTConfig",
+    "url": "https://www.mathworks.com/help/wlan/ref/wlanhtconfig.html",
+    "purpose": "HT MCS 与空间流/天线参数",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  },
+  {
+    "id": "MW34",
+    "title": "wlanSampleRate",
+    "url": "https://www.mathworks.com/help/wlan/ref/wlansamplerate.html",
+    "purpose": "Wi-Fi 采样率接口",
+    "accessed": "2026-09-29",
+    "kind": "official primary source"
+  }
+]

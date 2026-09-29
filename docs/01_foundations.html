@@ -1,0 +1,81 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>01 · IQ、采样和通信链路</title><style>
+:root{--ink:#172a3a;--muted:#5c6b78;--accent:#007d83;--line:#dce5ea;--paper:#fff}
+*{box-sizing:border-box}body{margin:0;background:#f1f5f7;color:var(--ink);font:16px/1.85 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+header{background:#142b3a;color:white;padding:24px 6vw;border-bottom:5px solid #20b7ab}header a{color:#96ede6;text-decoration:none}header .tag{font-size:12px;letter-spacing:2px;color:#adcad7}
+.layout{display:grid;grid-template-columns:250px minmax(0,980px);gap:28px;max-width:1330px;margin:32px auto;padding:0 24px}
+nav{position:sticky;top:20px;align-self:start;font-size:14px;max-height:90vh;overflow:auto}nav a{display:block;color:#435b6b;padding:5px 10px;text-decoration:none;border-left:2px solid transparent}nav a:hover{background:#e1eef0;border-color:var(--accent)}
+main{background:var(--paper);padding:40px 48px;border:1px solid var(--line);border-radius:10px;min-width:0}
+h1{font-size:30px;line-height:1.4;margin:0 0 24px}h2{font-size:23px;margin-top:38px;border-bottom:1px solid var(--line);padding-bottom:8px}h3{font-size:19px}a{color:#007b88}p{margin:14px 0}
+pre{padding:18px 20px;background:#122b39;color:#dff7f3;overflow:auto;border-radius:7px;line-height:1.65;font-size:13px}code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}p code,li code,td code{background:#eef3f5;padding:2px 5px;border-radius:3px;font-size:.9em}
+table{border-collapse:collapse;width:100%;font-size:14px;display:block;overflow:auto;margin:22px 0}th,td{border:1px solid var(--line);padding:10px 12px;vertical-align:top}th{background:#eaf3f5;text-align:left}tr:nth-child(even){background:#fafcfd}
+blockquote{border-left:4px solid var(--accent);margin-left:0;padding:2px 20px;background:#eef9f6}img{max-width:100%;height:auto}footer{padding:24px;color:var(--muted);font-size:13px;text-align:center}.toc{background:#f4f8f9;padding:10px 20px;border-radius:6px;font-size:14px}
+@media(max-width:900px){.layout{display:block;padding:0 12px}nav{position:static;max-height:180px;margin-bottom:18px}main{padding:25px 20px}h1{font-size:25px}}
+@media print{header,nav,footer,.toc{display:none}.layout{display:block;margin:0;padding:0}main{border:0;padding:0}pre{background:#eee;color:#111;white-space:pre-wrap}table{display:table;font-size:11px}h2,h3{break-after:avoid}img{max-height:85vh}}
+</style></head><body><header><div class="tag">SIMULATED MODULATION · MATLAB LAB</div><a href="../START_HERE.html">无线调制与波形实验室</a></header><div class="layout"><nav><a href="../README.html">无线调制与波形实验室 · Simulated Modulation</a><a href="../docs/00_start.html">00 · 从这里开始</a><a href="../docs/01_foundations.html">01 · IQ、采样和通信链路</a><a href="../docs/02_modulations.html">02 · 调制与脉冲成形</a><a href="../docs/03_ofdm_coding.html">03 · OFDM、编码与资源分配</a><a href="../docs/04_protocols.html">04 · Cellular、Wi-Fi、Bluetooth、Thread 的联系与区别</a><a href="../docs/05_recipes.html">05 · 参数配方与项目 API</a><a href="../docs/06_labs.html">06 · 15 个循序实验</a><a href="../docs/07_measurement.html">07 · 如何证明波形正确</a><a href="../docs/08_troubleshooting.html">08 · 排错手册</a><a href="../docs/09_advanced.html">09 · 进阶实验与扩展边界</a><a href="../docs/10_gui_simulink.html">10 · MATLAB 图形界面与 Simulink</a><a href="../docs/11_glossary_answers.html">11 · 术语、公式速查与练习答案</a><a href="../sop/01_install.html">SOP-01 · 环境安装与首次验收</a><a href="../sop/02_generate.html">SOP-02 · 生成一份可交付实验的 IQ</a><a href="../sop/03_change_parameters.html">SOP-03 · 修改参数与受控扫描</a><a href="../sop/04_instruments.html">SOP-04 · 从 IQ 文件到实验仪器</a><a href="../sop/05_validate.html">SOP-05 · 验证与验收</a><a href="../sop/06_reproducibility.html">SOP-06 · 复现、归档与版本控制</a><a href="../sop/07_record_template.html">实验记录模板</a><a href="../resources/REFERENCES.html">官方资料与阅读路径</a><a href="../reports/VALIDATION.html">交付验证报告 · 2026-09-29</a></nav><main><h1 id="01-iq">01 · IQ、采样和通信链路</h1>
+<h2 id="1">1. 比特不会直接变成天线上的正弦波</h2>
+<p>发射链路可以写成：</p>
+<pre><code class="language-text">应用字节 → 包头/CRC → 信道编码 → 交织/扰码 → 调制映射
+        → 脉冲成形 或 资源格+IFFT+CP → 复数 IQ → DAC/上变频 → RF
+</code></pre>
+<p>接收链路反过来，但还需要包检测、自动增益、定时、频偏补偿、信道估计与均衡。发射端知道的时间和参数，真实接收端往往不知道。</p>
+<p><strong>调制</strong>决定信息如何改变幅度、相位或频率；<strong>编码</strong>加入冗余以对抗错误；<strong>帧结构</strong>使接收机知道何时开始、用什么格式以及载荷多长。三者各有作用。</p>
+<h2 id="2">2. 复数基带到底是什么</h2>
+<p>定义 <code>x(t)=I(t)+jQ(t)</code>。本项目采用：</p>
+<pre><code class="language-text">s_RF(t) = Re{x(t) exp(j 2π fc t)}
+        = I(t) cos(2π fc t) − Q(t) sin(2π fc t)
+</code></pre>
+<p>I 和 Q 是同一信号的两个正交坐标，不是两种互不相关的射频信号。<code>abs(x)</code> 是包络；<code>angle(x)</code> 是相位。采样后的文件只存 <code>x[n]</code>，通常不直接存几 GHz 的真实 RF 正弦波。</p>
+<p>例如：Wi-Fi 中心频率设为 2.412 GHz，基带采样率可以是 20 MS/s。仪器以本振把基带搬到 RF；MATLAB 不必以大于 4.824 GS/s 的速率采样实数 RF。</p>
+<p><code>CenterFrequencyHz</code> 在本项目通常是<strong>元数据/仪器设置意图</strong>，不会自动给基带乘 2.412 GHz 的复指数。数字频移应使用相对于基带的偏移量，例如 +1 MHz。</p>
+<h2 id="3-bitsymbolchipsample">3. bit、symbol、chip、sample</h2>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>含义</th>
+<th>常见误区</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bit</td>
+<td>0/1 信息或编码结果</td>
+<td>净载荷比特率不一定等于空口比特率</td>
+</tr>
+<tr>
+<td>symbol</td>
+<td>一次调制选择</td>
+<td>16QAM 每个符号承载 4 个映射比特</td>
+</tr>
+<tr>
+<td>chip</td>
+<td>扩频码片</td>
+<td>一个信息符号可以扩展成很多码片</td>
+</tr>
+<tr>
+<td>sample</td>
+<td>波形离散采样点</td>
+<td>8 sample/symbol 并非每符号 8 个信息比特</td>
+</tr>
+</tbody>
+</table>
+<p>未编码单载波中：<code>Rb=Rs log2(M)</code>，<code>Fs=Rs*SPS</code>。有编码时净信息速率还乘码率；有前导、导频、CP、空闲和重传时，应用吞吐量更低。OFDM 则同时有很多子载波，不能直接把总比特率代入单载波公式。</p>
+<p>计算练习：16QAM，Rs=1 Msym/s，SPS=8，码率 1/2。采样率 8 MS/s，映射比特率 4 Mbit/s，忽略其他开销的净速率约 2 Mbit/s。</p>
+<h2 id="4">4. 采样与混叠</h2>
+<p>复数采样频率 Fs 对应一个宽度 Fs 的频率区间，常画成 <code>[-Fs/2,Fs/2)</code>。为了留出滤波过渡带，实际信号通常不能塞满整个区间。</p>
+<p><code>exp(j 2π f n/Fs)</code> 与 <code>exp(j 2π (f+Fs) n/Fs)</code> 相同。<code>lab01_iq_sampling</code> 用这个恒等式让你亲眼看到混叠。采样率写错不会改变文件的数值，却会让时间尺度与频率轴一起错误。</p>
+<p>对于数字搬移，必须满足信号搬移后的高低频边界仍在 Nyquist 区间内。仅检查 <code>abs(fOffset)&lt;Fs/2</code> 不够，还要把信号带宽算进去。</p>
+<h2 id="5-fft">5. FFT 的几个约定</h2>
+<ul>
+<li>MATLAB FFT 输出默认把 DC 放在第一个元素；绘图用 <code>fftshift</code> 将 DC 移到中央。</li>
+<li>教学 OFDM 的资源格采用中央 DC 排序，所以 IFFT 前需要 <code>ifftshift</code>。</li>
+<li>+125 kHz 复指数应在 +125 kHz 出现峰。把 Q 取反相当于共轭，会使频谱镜像。</li>
+<li>FFT 点数增大或补零会让曲线更密；真正的分辨能力仍受有效观测时间和窗函数限制。</li>
+</ul>
+<h2 id="6">6. 功率与单位</h2>
+<p>本项目中 IQ 是无量纲幅度。<code>mean(abs(x).^2)</code> 是数字域平均功率，<code>sqrt(...)</code> 是 RMS。dB 是比值：功率比用 <code>10 log10</code>，幅度比用 <code>20 log10</code>。</p>
+<p><strong>0 dBFS、0 dBm、IQ 峰值 1 不是同一个概念。</strong> dBm 对应实际毫瓦，取决于仪器输出标定、阻抗、增益与线缆损耗。不能从无量纲 IQ 单独推断 dBm。</p>
+<p>例：把 IQ 乘 0.5，数字平均功率变成原来的 1/4，即 −6.02 dB；但仪器如果自动归一化再以指定平均功率输出，实际端口功率不一定随之减 6.02 dB。必须理解设备的 ARB 电平定义。</p>
+<h2 id="7">7. 随机不等于不可复现</h2>
+<p><code>Seed</code> 决定载荷随机序列；项目生成器保留并恢复调用前的 MATLAB 随机状态。相同参数、种子、MATLAB/工具箱版本应产生可重复结果。跨版本算法默认值可能变化，因此实验应保存实际 IQ 和 <code>waveform.mat</code>，不能只保存一个种子。</p>
+<p>本章配套：lab01、lab02。参考接口见 <a href="../resources/REFERENCES.html">资料索引</a>，数学表达和实验均为本项目自行推导/编写。</p></main></div><footer>1.0.0 · 离线教程 · 运行状态以 reports/VALIDATION 与本机测试为准</footer></body></html>

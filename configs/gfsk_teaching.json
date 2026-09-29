@@ -1,0 +1,6 @@
+{
+  "Protocol": "gfsk",
+  "BT": 0.5,
+  "ModulationIndex": 0.5,
+  "Seed": 42
+}

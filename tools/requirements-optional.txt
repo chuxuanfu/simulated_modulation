@@ -1,0 +1,6 @@
+# Only for handbook rebuilding, independent QA and reference plotting.
+# MATLAB project itself has no Python dependency.
+markdown>=3.7,<4
+numpy>=2.0,<3
+matplotlib>=3.9,<4
+miss-hit==0.9.44

@@ -1,0 +1,15 @@
+{
+  "SampleRateHz": 1000000.0,
+  "NumSamples": 3,
+  "I": [
+    0.125,
+    -0.5,
+    0.8
+  ],
+  "Q": [
+    0.25,
+    0.75,
+    -0.1
+  ],
+  "source": "Independent Python format fixture, not a protocol waveform"
+}

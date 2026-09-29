@@ -1,0 +1,164 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>05 · 参数配方与项目 API</title><style>
+:root{--ink:#172a3a;--muted:#5c6b78;--accent:#007d83;--line:#dce5ea;--paper:#fff}
+*{box-sizing:border-box}body{margin:0;background:#f1f5f7;color:var(--ink);font:16px/1.85 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+header{background:#142b3a;color:white;padding:24px 6vw;border-bottom:5px solid #20b7ab}header a{color:#96ede6;text-decoration:none}header .tag{font-size:12px;letter-spacing:2px;color:#adcad7}
+.layout{display:grid;grid-template-columns:250px minmax(0,980px);gap:28px;max-width:1330px;margin:32px auto;padding:0 24px}
+nav{position:sticky;top:20px;align-self:start;font-size:14px;max-height:90vh;overflow:auto}nav a{display:block;color:#435b6b;padding:5px 10px;text-decoration:none;border-left:2px solid transparent}nav a:hover{background:#e1eef0;border-color:var(--accent)}
+main{background:var(--paper);padding:40px 48px;border:1px solid var(--line);border-radius:10px;min-width:0}
+h1{font-size:30px;line-height:1.4;margin:0 0 24px}h2{font-size:23px;margin-top:38px;border-bottom:1px solid var(--line);padding-bottom:8px}h3{font-size:19px}a{color:#007b88}p{margin:14px 0}
+pre{padding:18px 20px;background:#122b39;color:#dff7f3;overflow:auto;border-radius:7px;line-height:1.65;font-size:13px}code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}p code,li code,td code{background:#eef3f5;padding:2px 5px;border-radius:3px;font-size:.9em}
+table{border-collapse:collapse;width:100%;font-size:14px;display:block;overflow:auto;margin:22px 0}th,td{border:1px solid var(--line);padding:10px 12px;vertical-align:top}th{background:#eaf3f5;text-align:left}tr:nth-child(even){background:#fafcfd}
+blockquote{border-left:4px solid var(--accent);margin-left:0;padding:2px 20px;background:#eef9f6}img{max-width:100%;height:auto}footer{padding:24px;color:var(--muted);font-size:13px;text-align:center}.toc{background:#f4f8f9;padding:10px 20px;border-radius:6px;font-size:14px}
+@media(max-width:900px){.layout{display:block;padding:0 12px}nav{position:static;max-height:180px;margin-bottom:18px}main{padding:25px 20px}h1{font-size:25px}}
+@media print{header,nav,footer,.toc{display:none}.layout{display:block;margin:0;padding:0}main{border:0;padding:0}pre{background:#eee;color:#111;white-space:pre-wrap}table{display:table;font-size:11px}h2,h3{break-after:avoid}img{max-height:85vh}}
+</style></head><body><header><div class="tag">SIMULATED MODULATION · MATLAB LAB</div><a href="../START_HERE.html">无线调制与波形实验室</a></header><div class="layout"><nav><a href="../README.html">无线调制与波形实验室 · Simulated Modulation</a><a href="../docs/00_start.html">00 · 从这里开始</a><a href="../docs/01_foundations.html">01 · IQ、采样和通信链路</a><a href="../docs/02_modulations.html">02 · 调制与脉冲成形</a><a href="../docs/03_ofdm_coding.html">03 · OFDM、编码与资源分配</a><a href="../docs/04_protocols.html">04 · Cellular、Wi-Fi、Bluetooth、Thread 的联系与区别</a><a href="../docs/05_recipes.html">05 · 参数配方与项目 API</a><a href="../docs/06_labs.html">06 · 15 个循序实验</a><a href="../docs/07_measurement.html">07 · 如何证明波形正确</a><a href="../docs/08_troubleshooting.html">08 · 排错手册</a><a href="../docs/09_advanced.html">09 · 进阶实验与扩展边界</a><a href="../docs/10_gui_simulink.html">10 · MATLAB 图形界面与 Simulink</a><a href="../docs/11_glossary_answers.html">11 · 术语、公式速查与练习答案</a><a href="../sop/01_install.html">SOP-01 · 环境安装与首次验收</a><a href="../sop/02_generate.html">SOP-02 · 生成一份可交付实验的 IQ</a><a href="../sop/03_change_parameters.html">SOP-03 · 修改参数与受控扫描</a><a href="../sop/04_instruments.html">SOP-04 · 从 IQ 文件到实验仪器</a><a href="../sop/05_validate.html">SOP-05 · 验证与验收</a><a href="../sop/06_reproducibility.html">SOP-06 · 复现、归档与版本控制</a><a href="../sop/07_record_template.html">实验记录模板</a><a href="../resources/REFERENCES.html">官方资料与阅读路径</a><a href="../reports/VALIDATION.html">交付验证报告 · 2026-09-29</a></nav><main><h1 id="05-api">05 · 参数配方与项目 API</h1>
+<p>以下代码均在 <code>setup</code> 之后执行。先使用 <code>sm.generate(p)</code> 在内存中验证；需要保存完整实验时用 <code>generate_waveform(p)</code>。</p>
+<h2 id="a">A. 用统一接口生成</h2>
+<pre><code class="language-matlab">p = sm.defaultConfig('basic');
+p.Modulation = '64QAM';
+p.SymbolRateHz = 2e6;
+p.SamplesPerSymbol = 8;
+p.Rolloff = 0.25;
+w = generate_waveform(p);
+</code></pre>
+<p>结果采样率 16 MS/s，理想 RRC 支撑约 2.5 MHz。改变 Rs 改变时间和带宽；只增大 SPS 在相同 Rs 下提高采样密度。</p>
+<p>严格参数合并可捕获拼写错误：</p>
+<pre><code class="language-matlab">p = sm.configure('wifi_he',struct('MCS',4,'PayloadBytes',1024));
+w = generate_waveform(p);
+</code></pre>
+<h2 id="b-wi-fi">B. Wi-Fi 配方</h2>
+<pre><code class="language-matlab">p = sm.defaultConfig('wifi_vht');
+p.BandwidthMHz = 80;
+p.MCS = 5;
+p.PayloadBytes = 1024;
+p.CenterFrequencyHz = 5.21e9;
+w = generate_waveform(p);
+</code></pre>
+<p>中心频率仅是实验计划。具体信道/带宽组合必须与接收仪器设置相符。</p>
+<pre><code class="language-matlab">% 两路发射波形，保留各路相对幅度
+p = sm.defaultConfig('wifi_vht');
+p.NumTransmitAntennas = 2;
+p.NumSpaceTimeStreams = 2;
+w = generate_waveform(p);
+size(w.iq)
+</code></pre>
+<pre><code class="language-matlab">% Wi-Fi 7 的 4096QAM 实验：需要 EHT 支持和合法 MCS 配置
+p = sm.defaultConfig('wifi_eht');
+p.BandwidthMHz = 80;
+p.MCS = 12;
+p.PayloadBytes = 1500;
+w = generate_waveform(p);
+</code></pre>
+<p>高阶 MCS 是可选扩展配方；先通过 EHT 默认预设测试，再使用本机文档核对支持范围。320 MHz 会显著提高内存需求。</p>
+<h2 id="c-ble">C. BLE 四种模式</h2>
+<pre><code class="language-matlab">p = sm.defaultConfig('ble');
+p.ChannelIndex = 38;
+p.CenterFrequencyHz = sm.bleFrequency(38);
+w = generate_waveform(p); % LE1M 默认有效广播
+</code></pre>
+<pre><code class="language-matlab">p = sm.defaultConfig('ble');
+p.Mode = 'LE125K';
+p.PayloadKind = 'phy-test';
+p.ChannelIndex = 0;
+p.CenterFrequencyHz = sm.bleFrequency(0);
+p.TestMessageBits = 512;
+w = generate_waveform(p);
+</code></pre>
+<p>第二例只适合 PHY 波形测试，不含有效链路层语义。LE2M 和 LE500K 用相同方法修改 Mode。</p>
+<h2 id="d">D. 经典蓝牙</h2>
+<pre><code class="language-matlab">p = sm.defaultConfig('bt_classic');
+p.Mode = 'EDR3M';
+p.PacketType = 'DH1';
+p.PayloadBytes = 20;
+w = generate_waveform(p);
+</code></pre>
+<p>使用不同包类型前查看 <code>doc bluetoothWaveformConfig</code>。不要假定任意载荷长度对所有包类型都合法。</p>
+<h2 id="e-thread-phy">E. Thread PHY</h2>
+<pre><code class="language-matlab">p = sm.defaultConfig('thread');
+p.Channel = 20;
+p.CenterFrequencyHz = (2405+5*(p.Channel-11))*1e6;
+p.PayloadBytes = 64;
+w = generate_waveform(p);
+disp(w.details.PHYConfig)
+</code></pre>
+<p>需要自己的裸 MAC 载荷时，编辑/复制 <code>sm.generateThread</code> 的 <code>payload</code> 部分，仍让 <code>sm.mac802154</code> 计算 FCS；不要把包含 FCS 的完整帧再作为 payload 套一层头。若已有抓取的完整 PSDU，应直接用 <code>sm.bytesToBits</code> 与 <code>lrwpanWaveformGenerator</code>，并设置真实 PSDULength。</p>
+<h2 id="f-lte-5g-nr">F. LTE 和 5G NR</h2>
+<pre><code class="language-matlab">p = sm.defaultConfig('lte_dl');
+p.NumSubframes = 10;
+w = generate_waveform(p);
+</code></pre>
+<pre><code class="language-matlab">p = sm.defaultConfig('nr_dl');
+p.Modulation = '64QAM';
+p.TargetCodeRate = 0.5;
+p.PRBSet = 10:39;
+w = generate_waveform(p);
+</code></pre>
+<p>这只改变 PDSCH 调制/分配，不代表某个指定 MCS 索引。如果实验必须对应标准 MCS 表，需要同步设置调制阶数和目标码率。</p>
+<pre><code class="language-matlab">p = sm.defaultConfig('nr_ul');
+p.TransformPrecoding = true;
+p.PRBSet = 0:47; % 连续 48 PRB，避免 51 PRB 含不支持的变换因子
+w = generate_waveform(p);
+</code></pre>
+<p>带宽、SCS、NSizeGrid 必须成套设置。FR1 常见起步组合可选 20 MHz/30 kHz/51 PRB；本版对这些组合不内置完整 3GPP 表，非法组合由官方生成器明确报错。不要只把 BandwidthMHz 改为 100 而继续沿用其他默认值并称为满带宽波形。</p>
+<h2 id="g">G. 添加失真</h2>
+<pre><code class="language-matlab">p = sm.defaultConfig('basic');
+w = sm.generate(p);
+[w.iq,info] = sm.impair(w.iq,w.fs,struct( ...
+    'AddNoise',true,'SNRdB',25,'CFOHz',5000, ...
+    'IQGainImbalanceDB',1,'IQPhaseErrorDeg',3));
+w.details.Impairments = info;
+w.meta.Scope = [w.meta.Scope '; deliberately impaired'];
+folder = tempname(fullfile(sm.root(),'generated'));
+sm.exportBundle(w,folder,0.8);
+sm.plotWaveform(w,fullfile(folder,'overview.png'));
+</code></pre>
+<p>sm.impair 的 SNR 是全记录平均功率相对复噪声功率，包含空闲区，不是自动换算的 Eb/N0。多径模型接受离散 FIR 抽头，例如 <code>Taps=[1 zeros(1,7) 0.3]</code>，这表示第二径延迟 8 样点。尾部被截断并记录在 info 中；对尾部敏感时先补零。</p>
+<h2 id="h">H. 仪器采样率适配</h2>
+<pre><code class="language-matlab">w = sm.generate(sm.defaultConfig('ble'));
+u = sm.resampleWaveform(w,20e6);
+folder = tempname(fullfile(sm.root(),'generated'));
+sm.exportBundle(u,folder,0.8);
+</code></pre>
+<p>需要 Signal Processing Toolbox。只修改 fs 数字会把时频轴一起改错，必须真正重采样。降采样前确认占用频谱不会被抗混叠滤波器切掉；重采样后的 <code>details</code> 中原始 PacketSamples/PHYPacket 仍是原始生成参考，不适合直接切割新采样序列。</p>
+<h2 id="i-json">I. JSON 配方</h2>
+<pre><code class="language-matlab">w = generate_waveform(fullfile(sm.root(),'configs','wifi_he_20mhz.json'));
+</code></pre>
+<p>JSON 只列出覆盖参数，其余使用默认值。不接受拼错的未知字段。使用新协议或未知字段时会明确报错。可用 <code>sm.writeJSON</code> 保存自己的完整配置。</p>
+<h2 id="j">J. 对象结构与单位</h2>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>w.iq</td>
+<td>Nsample × Nchannel 复数 double，生成器原始幅度</td>
+</tr>
+<tr>
+<td>w.fs</td>
+<td>Hz，真实采样率</td>
+</tr>
+<tr>
+<td>w.config</td>
+<td>用户可复现参数</td>
+</tr>
+<tr>
+<td>w.meta</td>
+<td>通用元数据及作用范围</td>
+</tr>
+<tr>
+<td>w.details</td>
+<td>协议配置对象、已知比特、资源格等参考</td>
+</tr>
+<tr>
+<td>w.metrics</td>
+<td>顶层 generate_waveform 添加的原始波形测量</td>
+</tr>
+</tbody>
+</table>
+<p><code>SubcarrierSpacingKHz</code> 单位 kHz、<code>BandwidthMHz</code> 单位 MHz，其他带 Hz/Sec 的字段按名称。MATLAB 资源数组通常从 1 开始索引，而协议 PRB、slot、ChannelIndex 多从 0 开始；不要互换。</p>
+<h2 id="k">K. 函数查阅</h2>
+<p>在 MATLAB 中使用 <code>help sm.generate</code>、<code>edit sm.generateNR</code>、<code>doc nrWaveformGenerator</code>。先读小的适配器，再进入工具箱内部。研究代码时始终保留一个未修改的默认测试作为对照。</p></main></div><footer>1.0.0 · 离线教程 · 运行状态以 reports/VALIDATION 与本机测试为准</footer></body></html>

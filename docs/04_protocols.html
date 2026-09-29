@@ -1,0 +1,192 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>04 · Cellular、Wi-Fi、Bluetooth、Thread 的联系与区别</title><style>
+:root{--ink:#172a3a;--muted:#5c6b78;--accent:#007d83;--line:#dce5ea;--paper:#fff}
+*{box-sizing:border-box}body{margin:0;background:#f1f5f7;color:var(--ink);font:16px/1.85 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+header{background:#142b3a;color:white;padding:24px 6vw;border-bottom:5px solid #20b7ab}header a{color:#96ede6;text-decoration:none}header .tag{font-size:12px;letter-spacing:2px;color:#adcad7}
+.layout{display:grid;grid-template-columns:250px minmax(0,980px);gap:28px;max-width:1330px;margin:32px auto;padding:0 24px}
+nav{position:sticky;top:20px;align-self:start;font-size:14px;max-height:90vh;overflow:auto}nav a{display:block;color:#435b6b;padding:5px 10px;text-decoration:none;border-left:2px solid transparent}nav a:hover{background:#e1eef0;border-color:var(--accent)}
+main{background:var(--paper);padding:40px 48px;border:1px solid var(--line);border-radius:10px;min-width:0}
+h1{font-size:30px;line-height:1.4;margin:0 0 24px}h2{font-size:23px;margin-top:38px;border-bottom:1px solid var(--line);padding-bottom:8px}h3{font-size:19px}a{color:#007b88}p{margin:14px 0}
+pre{padding:18px 20px;background:#122b39;color:#dff7f3;overflow:auto;border-radius:7px;line-height:1.65;font-size:13px}code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}p code,li code,td code{background:#eef3f5;padding:2px 5px;border-radius:3px;font-size:.9em}
+table{border-collapse:collapse;width:100%;font-size:14px;display:block;overflow:auto;margin:22px 0}th,td{border:1px solid var(--line);padding:10px 12px;vertical-align:top}th{background:#eaf3f5;text-align:left}tr:nth-child(even){background:#fafcfd}
+blockquote{border-left:4px solid var(--accent);margin-left:0;padding:2px 20px;background:#eef9f6}img{max-width:100%;height:auto}footer{padding:24px;color:var(--muted);font-size:13px;text-align:center}.toc{background:#f4f8f9;padding:10px 20px;border-radius:6px;font-size:14px}
+@media(max-width:900px){.layout{display:block;padding:0 12px}nav{position:static;max-height:180px;margin-bottom:18px}main{padding:25px 20px}h1{font-size:25px}}
+@media print{header,nav,footer,.toc{display:none}.layout{display:block;margin:0;padding:0}main{border:0;padding:0}pre{background:#eee;color:#111;white-space:pre-wrap}table{display:table;font-size:11px}h2,h3{break-after:avoid}img{max-height:85vh}}
+</style></head><body><header><div class="tag">SIMULATED MODULATION · MATLAB LAB</div><a href="../START_HERE.html">无线调制与波形实验室</a></header><div class="layout"><nav><a href="../README.html">无线调制与波形实验室 · Simulated Modulation</a><a href="../docs/00_start.html">00 · 从这里开始</a><a href="../docs/01_foundations.html">01 · IQ、采样和通信链路</a><a href="../docs/02_modulations.html">02 · 调制与脉冲成形</a><a href="../docs/03_ofdm_coding.html">03 · OFDM、编码与资源分配</a><a href="../docs/04_protocols.html">04 · Cellular、Wi-Fi、Bluetooth、Thread 的联系与区别</a><a href="../docs/05_recipes.html">05 · 参数配方与项目 API</a><a href="../docs/06_labs.html">06 · 15 个循序实验</a><a href="../docs/07_measurement.html">07 · 如何证明波形正确</a><a href="../docs/08_troubleshooting.html">08 · 排错手册</a><a href="../docs/09_advanced.html">09 · 进阶实验与扩展边界</a><a href="../docs/10_gui_simulink.html">10 · MATLAB 图形界面与 Simulink</a><a href="../docs/11_glossary_answers.html">11 · 术语、公式速查与练习答案</a><a href="../sop/01_install.html">SOP-01 · 环境安装与首次验收</a><a href="../sop/02_generate.html">SOP-02 · 生成一份可交付实验的 IQ</a><a href="../sop/03_change_parameters.html">SOP-03 · 修改参数与受控扫描</a><a href="../sop/04_instruments.html">SOP-04 · 从 IQ 文件到实验仪器</a><a href="../sop/05_validate.html">SOP-05 · 验证与验收</a><a href="../sop/06_reproducibility.html">SOP-06 · 复现、归档与版本控制</a><a href="../sop/07_record_template.html">实验记录模板</a><a href="../resources/REFERENCES.html">官方资料与阅读路径</a><a href="../reports/VALIDATION.html">交付验证报告 · 2026-09-29</a></nav><main><h1 id="04-cellularwi-fibluetooththread">04 · Cellular、Wi-Fi、Bluetooth、Thread 的联系与区别</h1>
+<h2 id="_1">快速对照</h2>
+<table>
+<thead>
+<tr>
+<th>家族</th>
+<th>本项目 PHY</th>
+<th>波形组织</th>
+<th>频域观察</th>
+<th>本版帧/网络范围</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LTE DL</td>
+<td>标准参考测量信道</td>
+<td>OFDM</td>
+<td>连续资源占用、参考信号</td>
+<td>参考帧，不提供接入网络</td>
+</tr>
+<tr>
+<td>LTE UL</td>
+<td>上行参考信道</td>
+<td>DFT-s-OFDM</td>
+<td>资源分配与较低包络起伏</td>
+<td>无真实调度器</td>
+</tr>
+<tr>
+<td>NR DL</td>
+<td>FR1 PDSCH+DM-RS</td>
+<td>CP-OFDM</td>
+<td>可变 SCS/PRB</td>
+<td>默认关 SSB/PDCCH</td>
+</tr>
+<tr>
+<td>NR UL</td>
+<td>PUSCH+DM-RS</td>
+<td>CP/DFT-s-OFDM</td>
+<td>可比较预编码前后 PAPR</td>
+<td>无随机接入</td>
+</tr>
+<tr>
+<td>Wi-Fi</td>
+<td>non-HT/HT/VHT/HE/EHT</td>
+<td>OFDM；HE MU 可 OFDMA</td>
+<td>突发包和前导</td>
+<td>随机 PSDU，不含有效 MAC 会话</td>
+</tr>
+<tr>
+<td>BLE</td>
+<td>1M/2M/Coded PHY</td>
+<td>GFSK</td>
+<td>窄带突发、平滑频率摆动</td>
+<td>默认有效广播 PDU；其他模式为 PHY 测试</td>
+</tr>
+<tr>
+<td>经典蓝牙</td>
+<td>BR/EDR</td>
+<td>BR GFSK；EDR 差分 PSK 载荷</td>
+<td>包内不同字段可不同形态</td>
+<td>无跳频连接状态机</td>
+</tr>
+<tr>
+<td>Thread PHY</td>
+<td>2.4GHz 802.15.4</td>
+<td>DSSS+半正弦 OQPSK</td>
+<td>扩频与近恒包络</td>
+<td>无 Thread/6LoWPAN/MLE/安全栈</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="恒包络与多载波波形：独立 Python 参考图" src="../resources/reference_figures/04_waveform_families.png" /></p>
+<h2 id="1">1. 蜂窝：先明确下行还是上行</h2>
+<h3 id="lte">LTE</h3>
+<p><code>lte_dl</code> 调用 <code>lteRMCDLTool</code>；<code>lte_ul</code> 调用 <code>lteRMCULTool</code>。RMC（参考测量信道）给你一套彼此一致的资源配置，适合先观察标准波形，再逐项理解参数。下行默认 <code>R.0</code>，上行默认 <code>A1-3</code>。不要仅从 RC 名字猜带宽；查看 <code>w.details.LTEConfig</code> 中实际 RB 数、采样率与调制。</p>
+<pre><code class="language-matlab">p = sm.defaultConfig('lte_ul');
+w = generate_waveform(p);
+disp(w.details.LTEConfig)
+imagesc(abs(w.details.ResourceGrid(:,:,1))); axis xy
+</code></pre>
+<p>要发送你自己的数据，可在 <code>generateLTE.m</code> 中把随机 <code>bits</code> 替换成二进制列向量；工具箱可能循环使用输入比特以填满多个传输块。因此应保存输入及每个块的实际配置，而不是假定“一次传入恰好一个包”。</p>
+<h3 id="5g-nr">5G NR</h3>
+<p>默认 NR 方案刻意把数据链路配置写明：单 BWP、单层、FR1、PDSCH 或 PUSCH、DM-RS、编码与目标码率。<code>w.details.NRConfig</code> 是可检查的工具箱配置对象，<code>WaveformInfo</code> 包含资源网格等信息。</p>
+<p>SSB 用于同步/广播相关内容，PDCCH 承载控制；本项目默认下行关闭它们，适合调制、功放、频谱和资源格实验，不能使手机驻留在这个“基站”上。</p>
+<p>想研究小区搜索和控制信道，应沿官方完整下行示例扩展，并同步设置 SSB pattern、SCS、CORESET、搜索空间、DCI 与 PDSCH 资源。不要只把 <code>SSBurst.Enable</code> 改成 true 就宣称做出了真实基站。</p>
+<h2 id="2-wi-fi">2. Wi-Fi：代际与配置对象</h2>
+<table>
+<thead>
+<tr>
+<th>本项目名</th>
+<th>配置对象</th>
+<th>实验定位</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>wifi_nonht</td>
+<td>wlanNonHTConfig</td>
+<td>OFDM 基线，适合首次接收恢复</td>
+</tr>
+<tr>
+<td>wifi_ht</td>
+<td>wlanHTConfig</td>
+<td>802.11n，高吞吐</td>
+</tr>
+<tr>
+<td>wifi_vht</td>
+<td>wlanVHTConfig</td>
+<td>802.11ac，VHT</td>
+</tr>
+<tr>
+<td>wifi_he</td>
+<td>wlanHESUConfig</td>
+<td>802.11ax，HE 单用户</td>
+</tr>
+<tr>
+<td>wifi_eht</td>
+<td>wlanEHTMUConfig</td>
+<td>802.11be，配置为单用户</td>
+</tr>
+</tbody>
+</table>
+<p>这些对象不代表完整家庭路由器。PHY 前导、信令和数据字段由 <code>wlanWaveformGenerator</code> 组织；输入 PSDU 是否含正确 MAC 头、地址、FCS、聚合子帧，由更上层的生成流程决定。本版默认使用随机 PSDU，适合 PHY 仪器实验。</p>
+<p>对 non-HT/HT，载荷字段使用 PSDULength；VHT/HE/EHT 配置使用 APEP 长度，再由对象计算实际 PSDU 字节数。项目已经处理这一差别，避免高代际包尾填充使比特长度不匹配。</p>
+<p><code>MCS</code> 不是独立的 QAM 阶数选择器。合法组合还取决于带宽、空间流、编码、RU 等。开始时使用默认 MCS=0；逐步改 2、4、7；高阶 MCS 以对应版本 <code>doc</code> 表格为准。</p>
+<p>本项目通用适配器只处理一个用户。HE OFDMA 使用 <code>lab15_wlan_ofdma</code>，通过每用户一个比特向量演示资源分配。VHT 两天线可以直接改 <code>NumTransmitAntennas=2</code>、<code>NumSpaceTimeStreams=2</code>。</p>
+<p>参考：<a href="https://www.mathworks.com/help/wlan/ref/wlanwaveformgenerator.html">WLAN 生成器</a>、<a href="https://www.mathworks.com/help/wlan/ref/wlanhesuconfig.getpsdulength.html">HE PSDU 长度</a>、<a href="https://www.mathworks.com/help/wlan/ref/wlanehtuser.html">EHT 用户设置</a>。</p>
+<h2 id="3-bluetoothle-bredr">3. Bluetooth：LE 与 BR/EDR 分开理解</h2>
+<h3 id="ble">BLE</h3>
+<p>LE1M 是 1 Msym/s GFSK，LE2M 是 2 Msym/s；LE500K 和 LE125K 通过编码扩展提高鲁棒性，其空中调制符号速率仍是 1 Msym/s。于是 SPS=8 时，采样率分别是 8、16、8、8 MS/s。</p>
+<p>BLE 逻辑 ChannelIndex 不按 RF 频率顺序简单排列：广播信道 37/38/39 对应 2402/2426/2480 MHz。<code>sm.bleFrequency</code> 负责映射。ChannelIndex 也用于白化，不能只改仪器本振而不更新相关配置。</p>
+<p><code>PayloadKind='advertising'</code>：LE1M、广播信道，使用工具箱构建广播 PDU 与 CRC，广告内容是 Flags 和名称 SimLab01。该输入已经包括 CRC，禁止再重复添加。<code>lab08_ble_receive</code> 同时检查 PHY 比特恢复和 LL 解码。</p>
+<p><code>PayloadKind='phy-test'</code>：输入随机测试位，包括占据 PDU/CRC 位置的位；它们并不是有效 CRC。可研究四种 PHY，却不能用它验证手机扫描或连接行为。经典广播也不允许简单替换成 LE2M 发送；扩展广播需要对应结构和时序。</p>
+<h3 id="_2">经典蓝牙</h3>
+<p>BR、EDR2M、EDR3M 的基础调制符号率均为 1 Msym/s；EDR 每符号传更多位。SPS=8 时三者都是 8 MS/s。模式切换还需合法 PacketType，项目默认使用 <code>DH1</code> 并交由配置对象验证。</p>
+<p>随机信道跳转的 GFSK 片段并不等于真正连接中的跳频序列。包时序、地址、白化初始化和控制器状态都有关。本版侧重生成工具箱 PHY 包，不模拟 piconet。</p>
+<p>参考：<a href="https://www.mathworks.com/help/bluetooth/ref/blewaveformgenerator.html">BLE 生成器</a>、<a href="https://www.bluetooth.com/bluetooth-le-primer/">BLE 官方入门</a>、<a href="https://www.mathworks.com/help/bluetooth/ref/bluetoothwaveformconfig.html">BR/EDR 配置</a>。</p>
+<h2 id="4-thread">4. Thread：物理层与网络层的分界</h2>
+<p>Thread 是基于 IPv6 的低功耗网状网络体系。常见 2.4 GHz Thread 无线链路使用 IEEE 802.15.4 PHY，并非一种名叫“Thread-QAM”的独立调制。它与 Zigbee 可共享相近物理层，却是不同网络协议；Matter 又是更上层应用体系。<a href="https://openthread.io/guides/thread-primer">OpenThread 官方说明</a></p>
+<p>本项目固定 2.4 GHz OQPSK 路线：250 kbit/s → 每 4 bit 形成符号 → 标准扩频至 32 chip → 2 Mchip/s → 半正弦 OQPSK。标准扩频码表由工具箱实现。</p>
+<p>帧由 4 字节前导、1 字节 SFD、1 字节 PHR 和 PSDU 组成。PSDU 包括 MAC 头、载荷与两字节 FCS，最大 127 字节。本项目 9 字节 MAC 头，因此应用测试载荷上限 116 字节。默认 32 字节测试载荷给出 43 字节 PSDU；不含成形尾部的名义时长为 <code>(6+43)*8/250000=1.568 ms</code>。</p>
+<p>MAC 头采用短地址、PAN 压缩、无安全、无 ACK 请求；FCS 使用 CRC-16/KERMIT 形式（反射多项式 0x8408、初值 0）。这个结构可以用于 PHY/裸 MAC 实验，但测试载荷并非有效 Thread 网络报文。</p>
+<p>信道频率：<code>fc_MHz=2405+5*(channel-11)</code>，信道 11–26。Channel=15 对应 2425 MHz。<a href="https://github.com/openthread/openthread/blob/main/include/openthread/platform/radio.h">OpenThread 无线常量</a></p>
+<p><strong>采样参数注意：</strong> <code>lrwpanOQPSKConfig.SamplesPerChip</code> 按工具箱的成形 chip pulse 约定定义，不要套用教学 <code>oqpsk</code> 的串行码片 SPS。代码读取 <code>cfg.SampleRate</code> 并用包时长复核；用户只需认准最终输出采样率。</p>
+<h2 id="5">5. 按实验选择实现层次</h2>
+<table>
+<thead>
+<tr>
+<th>目标</th>
+<th>选择</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>看 QAM 阶数、成形与噪声</td>
+<td>basic + lab02/03/06</td>
+</tr>
+<tr>
+<td>测功放包络/频谱再生</td>
+<td>完整协议 IQ，保留导出缩放与 PAPR</td>
+</tr>
+<tr>
+<td>测仪器 PHY 解调</td>
+<td>先从默认合法预设及已知包长开始</td>
+</tr>
+<tr>
+<td>测 MAC CRC</td>
+<td>BLE 默认广播或 802.15.4 MAC 示例；Wi-Fi 需另外构造有效 MAC</td>
+</tr>
+<tr>
+<td>测真实设备接入/吞吐</td>
+<td>加入协议栈、调度和合适射频硬件；超出本版离线波形范围</td>
+</tr>
+<tr>
+<td>测共存干扰</td>
+<td>lab14，并明确相对功率、占空比、频偏与接收判据</td>
+</tr>
+</tbody>
+</table></main></div><footer>1.0.0 · 离线教程 · 运行状态以 reports/VALIDATION 与本机测试为准</footer></body></html>

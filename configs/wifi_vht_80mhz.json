@@ -1,0 +1,7 @@
+{
+  "Protocol": "wifi_vht",
+  "BandwidthMHz": 80,
+  "MCS": 5,
+  "CenterFrequencyHz": 5210000000.0,
+  "Seed": 42
+}

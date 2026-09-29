@@ -1,0 +1,6 @@
+{
+  "Protocol": "oqpsk",
+  "ChipRateHz": 2000000.0,
+  "SamplesPerChip": 8,
+  "Seed": 42
+}

@@ -1,0 +1,108 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>02 · 调制与脉冲成形</title><style>
+:root{--ink:#172a3a;--muted:#5c6b78;--accent:#007d83;--line:#dce5ea;--paper:#fff}
+*{box-sizing:border-box}body{margin:0;background:#f1f5f7;color:var(--ink);font:16px/1.85 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+header{background:#142b3a;color:white;padding:24px 6vw;border-bottom:5px solid #20b7ab}header a{color:#96ede6;text-decoration:none}header .tag{font-size:12px;letter-spacing:2px;color:#adcad7}
+.layout{display:grid;grid-template-columns:250px minmax(0,980px);gap:28px;max-width:1330px;margin:32px auto;padding:0 24px}
+nav{position:sticky;top:20px;align-self:start;font-size:14px;max-height:90vh;overflow:auto}nav a{display:block;color:#435b6b;padding:5px 10px;text-decoration:none;border-left:2px solid transparent}nav a:hover{background:#e1eef0;border-color:var(--accent)}
+main{background:var(--paper);padding:40px 48px;border:1px solid var(--line);border-radius:10px;min-width:0}
+h1{font-size:30px;line-height:1.4;margin:0 0 24px}h2{font-size:23px;margin-top:38px;border-bottom:1px solid var(--line);padding-bottom:8px}h3{font-size:19px}a{color:#007b88}p{margin:14px 0}
+pre{padding:18px 20px;background:#122b39;color:#dff7f3;overflow:auto;border-radius:7px;line-height:1.65;font-size:13px}code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}p code,li code,td code{background:#eef3f5;padding:2px 5px;border-radius:3px;font-size:.9em}
+table{border-collapse:collapse;width:100%;font-size:14px;display:block;overflow:auto;margin:22px 0}th,td{border:1px solid var(--line);padding:10px 12px;vertical-align:top}th{background:#eaf3f5;text-align:left}tr:nth-child(even){background:#fafcfd}
+blockquote{border-left:4px solid var(--accent);margin-left:0;padding:2px 20px;background:#eef9f6}img{max-width:100%;height:auto}footer{padding:24px;color:var(--muted);font-size:13px;text-align:center}.toc{background:#f4f8f9;padding:10px 20px;border-radius:6px;font-size:14px}
+@media(max-width:900px){.layout{display:block;padding:0 12px}nav{position:static;max-height:180px;margin-bottom:18px}main{padding:25px 20px}h1{font-size:25px}}
+@media print{header,nav,footer,.toc{display:none}.layout{display:block;margin:0;padding:0}main{border:0;padding:0}pre{background:#eee;color:#111;white-space:pre-wrap}table{display:table;font-size:11px}h2,h3{break-after:avoid}img{max-height:85vh}}
+</style></head><body><header><div class="tag">SIMULATED MODULATION · MATLAB LAB</div><a href="../START_HERE.html">无线调制与波形实验室</a></header><div class="layout"><nav><a href="../README.html">无线调制与波形实验室 · Simulated Modulation</a><a href="../docs/00_start.html">00 · 从这里开始</a><a href="../docs/01_foundations.html">01 · IQ、采样和通信链路</a><a href="../docs/02_modulations.html">02 · 调制与脉冲成形</a><a href="../docs/03_ofdm_coding.html">03 · OFDM、编码与资源分配</a><a href="../docs/04_protocols.html">04 · Cellular、Wi-Fi、Bluetooth、Thread 的联系与区别</a><a href="../docs/05_recipes.html">05 · 参数配方与项目 API</a><a href="../docs/06_labs.html">06 · 15 个循序实验</a><a href="../docs/07_measurement.html">07 · 如何证明波形正确</a><a href="../docs/08_troubleshooting.html">08 · 排错手册</a><a href="../docs/09_advanced.html">09 · 进阶实验与扩展边界</a><a href="../docs/10_gui_simulink.html">10 · MATLAB 图形界面与 Simulink</a><a href="../docs/11_glossary_answers.html">11 · 术语、公式速查与练习答案</a><a href="../sop/01_install.html">SOP-01 · 环境安装与首次验收</a><a href="../sop/02_generate.html">SOP-02 · 生成一份可交付实验的 IQ</a><a href="../sop/03_change_parameters.html">SOP-03 · 修改参数与受控扫描</a><a href="../sop/04_instruments.html">SOP-04 · 从 IQ 文件到实验仪器</a><a href="../sop/05_validate.html">SOP-05 · 验证与验收</a><a href="../sop/06_reproducibility.html">SOP-06 · 复现、归档与版本控制</a><a href="../sop/07_record_template.html">实验记录模板</a><a href="../resources/REFERENCES.html">官方资料与阅读路径</a><a href="../reports/VALIDATION.html">交付验证报告 · 2026-09-29</a></nav><main><h1 id="02">02 · 调制与脉冲成形</h1>
+<h2 id="1">1. 从二维点到连续波形</h2>
+<p>调制映射首先得到一列复数符号 <code>a[k]</code>。随后用脉冲 <code>p(t)</code> 连接这些符号：</p>
+<pre><code class="language-text">x(t) = Σ a[k] p(t − kTs)
+</code></pre>
+<p>星座图中的点通常指 <code>a[k]</code>，而不是任意时刻的 <code>x(t)</code>。直接对所有过采样点画散点，会出现点之间的轨迹、圆环或云团；这不表示映射错误。先匹配滤波、补偿延迟、恢复定时，再谈接收星座。</p>
+<p><img alt="星座与时间样点的区别：独立 Python 参考图" src="../resources/reference_figures/01_constellation.png" /></p>
+<h2 id="2-psk-qam">2. PSK 与 QAM</h2>
+<table>
+<thead>
+<tr>
+<th>调制</th>
+<th>本项目映射特点</th>
+<th>看什么</th>
+<th>实验用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BPSK</td>
+<td>两点 ±1，1 bit/symbol</td>
+<td>相位相差 π</td>
+<td>噪声/BER 基准</td>
+</tr>
+<tr>
+<td>QPSK</td>
+<td>四点，I/Q 各一个符号位</td>
+<td>每符号 2 bit</td>
+<td>比较频谱效率</td>
+</tr>
+<tr>
+<td>8PSK</td>
+<td>8 个相位，Gray 标号</td>
+<td>相位间距缩小</td>
+<td>理解相位噪声敏感性</td>
+</tr>
+<tr>
+<td>16QAM</td>
+<td>4×4 方格，4 bit/symbol</td>
+<td>幅度、相位同时变化</td>
+<td>EVM 与削顶</td>
+</tr>
+<tr>
+<td>64QAM</td>
+<td>8×8 方格，6 bit/symbol</td>
+<td>点间距离更小</td>
+<td>高阶调制对 SNR 的需求</td>
+</tr>
+<tr>
+<td>256QAM</td>
+<td>16×16 方格，8 bit/symbol</td>
+<td>同平均能量下容错更小</td>
+<td>仪器/链路线性度</td>
+</tr>
+</tbody>
+</table>
+<p>Gray 标号使最近邻误判通常只改变一个比特。它不会扩大几何距离，也不能消灭噪声。</p>
+<p>本项目 QAM 的归一化分母为 <code>sqrt(2*(M-1)/3)</code>，使完整等概率星座的平均能量为 1。有限随机符号块的实测平均能量会稍有偏离。基础映射的位序属于本项目约定；标准协议应调用对应标准映射器，不要把基础函数直接替换进去。</p>
+<h2 id="3-rrc">3. 为什么需要 RRC</h2>
+<p>直接用矩形脉冲重复符号很容易实现，但频谱旁瓣衰减慢。Raised Cosine（RC）总体响应满足 Nyquist 零 ISI 条件；发射和接收各用一个 Root Raised Cosine（RRC），组合后近似 RC。</p>
+<p>关键参数：</p>
+<ul>
+<li><code>Rolloff=α</code>：越小，频谱越紧，但时域尾巴越长，对截断/定时更敏感。</li>
+<li><code>FilterSpanSymbols</code>：有限 FIR 覆盖的符号数；增大后更接近理想响应，同时增加计算与延迟。</li>
+<li><code>SamplesPerSymbol</code>：每符号采样点；改变它不等于改变符号率。</li>
+</ul>
+<p>理想 RC/RRC 的复数基带总支撑带宽约 <code>(1+α)Rs</code>；99% 功率带宽并不严格等于该数值。默认 Rs=1 MHz、α=0.35，理想支撑约 1.35 MHz。</p>
+<p>长度为 <code>span*SPS+1</code> 的对称滤波器，单个群延迟为 <code>span*SPS/2</code> 样点。发射加接收合计 <code>span*SPS</code>。lab02 按这个延迟抽样。保留滤波尾巴是为了让包末符号也能恢复，不能简单删除看起来“不整齐”的点。</p>
+<p><img alt="RRC 滚降系数：独立 Python 参考图" src="../resources/reference_figures/02_rrc.png" /></p>
+<h2 id="4-fskgfsk">4. FSK、GFSK 与调制指数</h2>
+<p>FSK 把比特变成瞬时频率；相位是频率积分：</p>
+<pre><code class="language-text">x(t)=exp(jφ(t)),  φ(t)=2π∫ f_inst(τ)dτ
+h = 2Δf/Rs
+</code></pre>
+<p>对二进制连续相位 FSK，未平滑的稳态偏移为 ±Δf。GFSK 先用高斯滤波器平滑频率控制序列，再积分成相位。BT 是高斯滤波器带宽与符号周期的乘积；它控制过渡平滑度，不是 Bluetooth 的缩写。</p>
+<p>基础 <code>gfsk</code> 默认 h=0.5、Rb=1 MHz，稳态频偏约 ±250 kHz，包络为 1。改变 BT 会改变过渡速度和旁瓣；改变 h 会改变频率摆幅。这里的中心化有限高斯滤波实现用于观察机理，不替代标准蓝牙包发生器。</p>
+<p>为什么恒包络有用：理想情况下可容忍更高效率的非线性功放。但实际包边缘、滤波、IQ 失配仍可能产生包络变化。</p>
+<h2 id="5-oqpsk">5. OQPSK 与半正弦成形</h2>
+<p>QPSK 的 I/Q 可以同时改变符号；OQPSK 把两支路错开半个支路符号周期，避免两支同时跨零造成的最大相位跳变。</p>
+<p>在本项目教学 OQPSK 中：串行码片速率 Rc=2 Mchip/s，奇偶码片分别进入 I/Q；每支路更新率为 Rc/2，Q 相对 I 延迟一个串行码片周期 Tc。每个半正弦脉冲持续 2Tc。内部区间 I/Q 形如带正负号的 sin/cos，平方和为 1，因此包络近似恒定；首尾上升/下降段除外。</p>
+<p>这解释了 Thread/802.15.4 的波形特性，却还缺少 IEEE 规定的 4-bit→32-chip 码表、前导和帧头。<code>oqpsk</code> 是教学信号；<code>thread</code> 预设才调用标准 PHY 生成器。</p>
+<h2 id="6">6. 差分相位调制与经典蓝牙</h2>
+<p>普通 PSK 的信息由绝对星座点决定；差分 PSK 由相邻符号的相位变化决定。经典蓝牙 EDR 载荷使用差分相位调制：EDR2M 使用 π/4-DQPSK，EDR3M 使用 8DPSK；包的其他部分仍有不同处理。不能把整包当作单一 QPSK 或 8PSK 信号。协议层的细节由 <code>bluetoothWaveformGenerator</code> 实现。<a href="https://www.mathworks.com/help/bluetooth/ref/bluetoothwaveformgenerator.html">官方入口</a></p>
+<h2 id="7-chirp">7. 扩频与 chirp</h2>
+<p>DSSS 是用更快的码片序列展开数据，接收端用已知序列相关恢复。理想处理增益常写为 <code>10 log10(Rchip/Rdata)</code>，但真实干扰抑制依赖同步、码相关、干扰类型和接收结构。</p>
+<p>FHSS 是载频随时间切换；信道内可以仍采用 GFSK。跳频策略、驻留时间和网络时序也是协议的一部分，不能靠随机频移模拟出完整蓝牙跳频连接。</p>
+<p>Chirp 是频率随时间扫动。线性 chirp 可由二次相位生成；LoRa 等系统还有专用符号、编码和包结构。lab13 的 chirp 只是扩展原理演示。</p>
+<h2 id="8">8. 现在应该能回答</h2>
+<ol>
+<li>为什么 16QAM 的时域散点不只有 16 个点？</li>
+<li>为什么 GFSK 的相位连续，但瞬时频率会变化？</li>
+<li>为什么 RRC 滤波越长，第一次有效判决通常越晚？</li>
+<li>为什么 OQPSK 的码片采样率与支路符号采样率容易差一倍？</li>
+</ol>
+<p>答案在 <a href="11_glossary_answers.html">术语与练习答案</a>。</p></main></div><footer>1.0.0 · 离线教程 · 运行状态以 reports/VALIDATION 与本机测试为准</footer></body></html>

@@ -1,0 +1,7 @@
+{
+  "Protocol": "basic",
+  "Modulation": "64QAM",
+  "SymbolRateHz": 2000000.0,
+  "Rolloff": 0.25,
+  "Seed": 42
+}

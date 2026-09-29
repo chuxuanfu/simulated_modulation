@@ -1,0 +1,5 @@
+{
+  "Protocol": "bt_classic",
+  "Mode": "EDR2M",
+  "Seed": 42
+}

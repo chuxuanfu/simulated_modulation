@@ -1,0 +1,89 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>07 · 如何证明波形正确</title><style>
+:root{--ink:#172a3a;--muted:#5c6b78;--accent:#007d83;--line:#dce5ea;--paper:#fff}
+*{box-sizing:border-box}body{margin:0;background:#f1f5f7;color:var(--ink);font:16px/1.85 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+header{background:#142b3a;color:white;padding:24px 6vw;border-bottom:5px solid #20b7ab}header a{color:#96ede6;text-decoration:none}header .tag{font-size:12px;letter-spacing:2px;color:#adcad7}
+.layout{display:grid;grid-template-columns:250px minmax(0,980px);gap:28px;max-width:1330px;margin:32px auto;padding:0 24px}
+nav{position:sticky;top:20px;align-self:start;font-size:14px;max-height:90vh;overflow:auto}nav a{display:block;color:#435b6b;padding:5px 10px;text-decoration:none;border-left:2px solid transparent}nav a:hover{background:#e1eef0;border-color:var(--accent)}
+main{background:var(--paper);padding:40px 48px;border:1px solid var(--line);border-radius:10px;min-width:0}
+h1{font-size:30px;line-height:1.4;margin:0 0 24px}h2{font-size:23px;margin-top:38px;border-bottom:1px solid var(--line);padding-bottom:8px}h3{font-size:19px}a{color:#007b88}p{margin:14px 0}
+pre{padding:18px 20px;background:#122b39;color:#dff7f3;overflow:auto;border-radius:7px;line-height:1.65;font-size:13px}code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}p code,li code,td code{background:#eef3f5;padding:2px 5px;border-radius:3px;font-size:.9em}
+table{border-collapse:collapse;width:100%;font-size:14px;display:block;overflow:auto;margin:22px 0}th,td{border:1px solid var(--line);padding:10px 12px;vertical-align:top}th{background:#eaf3f5;text-align:left}tr:nth-child(even){background:#fafcfd}
+blockquote{border-left:4px solid var(--accent);margin-left:0;padding:2px 20px;background:#eef9f6}img{max-width:100%;height:auto}footer{padding:24px;color:var(--muted);font-size:13px;text-align:center}.toc{background:#f4f8f9;padding:10px 20px;border-radius:6px;font-size:14px}
+@media(max-width:900px){.layout{display:block;padding:0 12px}nav{position:static;max-height:180px;margin-bottom:18px}main{padding:25px 20px}h1{font-size:25px}}
+@media print{header,nav,footer,.toc{display:none}.layout{display:block;margin:0;padding:0}main{border:0;padding:0}pre{background:#eee;color:#111;white-space:pre-wrap}table{display:table;font-size:11px}h2,h3{break-after:avoid}img{max-height:85vh}}
+</style></head><body><header><div class="tag">SIMULATED MODULATION · MATLAB LAB</div><a href="../START_HERE.html">无线调制与波形实验室</a></header><div class="layout"><nav><a href="../README.html">无线调制与波形实验室 · Simulated Modulation</a><a href="../docs/00_start.html">00 · 从这里开始</a><a href="../docs/01_foundations.html">01 · IQ、采样和通信链路</a><a href="../docs/02_modulations.html">02 · 调制与脉冲成形</a><a href="../docs/03_ofdm_coding.html">03 · OFDM、编码与资源分配</a><a href="../docs/04_protocols.html">04 · Cellular、Wi-Fi、Bluetooth、Thread 的联系与区别</a><a href="../docs/05_recipes.html">05 · 参数配方与项目 API</a><a href="../docs/06_labs.html">06 · 15 个循序实验</a><a href="../docs/07_measurement.html">07 · 如何证明波形正确</a><a href="../docs/08_troubleshooting.html">08 · 排错手册</a><a href="../docs/09_advanced.html">09 · 进阶实验与扩展边界</a><a href="../docs/10_gui_simulink.html">10 · MATLAB 图形界面与 Simulink</a><a href="../docs/11_glossary_answers.html">11 · 术语、公式速查与练习答案</a><a href="../sop/01_install.html">SOP-01 · 环境安装与首次验收</a><a href="../sop/02_generate.html">SOP-02 · 生成一份可交付实验的 IQ</a><a href="../sop/03_change_parameters.html">SOP-03 · 修改参数与受控扫描</a><a href="../sop/04_instruments.html">SOP-04 · 从 IQ 文件到实验仪器</a><a href="../sop/05_validate.html">SOP-05 · 验证与验收</a><a href="../sop/06_reproducibility.html">SOP-06 · 复现、归档与版本控制</a><a href="../sop/07_record_template.html">实验记录模板</a><a href="../resources/REFERENCES.html">官方资料与阅读路径</a><a href="../reports/VALIDATION.html">交付验证报告 · 2026-09-29</a></nav><main><h1 id="07">07 · 如何证明波形正确</h1>
+<h2 id="1">1. 按层验证</h2>
+<table>
+<thead>
+<tr>
+<th>层</th>
+<th>应检查</th>
+<th>不能据此证明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>文件</td>
+<td>字节数、IQ 顺序、端序、读回误差</td>
+<td>协议正确</td>
+</tr>
+<tr>
+<td>数值</td>
+<td>非零、有限、采样率、长度</td>
+<td>MAC/CRC 有效</td>
+</tr>
+<tr>
+<td>波形</td>
+<td>时间包络、PSD、时频图、峰值</td>
+<td>接收可解码</td>
+</tr>
+<tr>
+<td>PHY</td>
+<td>同步、解调、EVM、已知位比较</td>
+<td>能加入真实网络</td>
+</tr>
+<tr>
+<td>MAC/链路</td>
+<td>CRC、地址、包类型、时序</td>
+<td>网络认证与应用成功</td>
+</tr>
+<tr>
+<td>系统</td>
+<td>接入、吞吐、丢包、延迟</td>
+<td>标准一致性认证</td>
+</tr>
+</tbody>
+</table>
+<p>先做离线无噪声回环，再加噪声、信道和硬件。每加一项都保留一个干净对照。</p>
+<h2 id="2-psd">2. PSD 的口径</h2>
+<p><code>sm.psd</code> 使用周期 Hann 窗、50% 重叠、双边 Welch 平均，输出单位是数字幅度平方/Hz。积分 <code>sum(PSD)*df</code> 应近似记录平均功率。对平稳整周期单音，项目测试要求误差&lt;1e-10。</p>
+<p>全记录包含空闲时，PSD 的平均电平低于仅包内统计。若将每张图按各自最大值归一化，能比较形状，却不能比较绝对数字功率。测旁瓣和邻道时应使用同一采样率、窗、FFT 长度、参考电平与积分范围。</p>
+<h2 id="3-obw99">3. OBW99</h2>
+<p>项目从累计 PSD 的 0.5% 与 99.5% 位置估计占用带宽；这不是“超过某个阈值的谱宽”，也不是分配信道带宽。有限记录、包边缘、噪声和窗函数都会影响结果。</p>
+<p>加上白噪声后，OBW99 可能大幅增长，因为噪声铺满采样带宽。不能把这个增长全归因于调制本身。仪器的 OBW 算法/扫宽/RBW 也可能不同。</p>
+<h2 id="4-papr">4. PAPR 与占空比</h2>
+<p><code>PAPR=10log10(max|x|²/mean|x|²)</code>。如果平均值包含包间空闲，PAPR 会比包内平均定义高。必须写明口径。</p>
+<p>本项目 metrics 使用全记录、现有样点、每天线分别统计。要得到更接近连续时间的峰值，应提高过采样并验证插值滤波；这不是 simply 对曲线插更多显示点。比较不同协议时不能忘记其占空比不同。</p>
+<h2 id="5-evm">5. EVM</h2>
+<p><code>EVM_RMS=100*sqrt(Σ|s_rx−s_ref|² / Σ|s_ref|²)</code>。输入必须是匹配的参考符号和恢复符号，已经对齐时间、频率、资源位置。</p>
+<p><code>sm.evm(...,false)</code> 不拟合增益，保留幅度与相位偏差；<code>true</code> 只拟合一个复数标量。它不会进行包检测、定时恢复、CFO 估计或逐子载波均衡。使用不同补偿规则得到的 EVM 不能直接比较。</p>
+<p>对 OFDM，请在 FFT、信道均衡、导频/CPE 处理之后对指定数据资源计算 EVM。任意时域样点散点绝不是 OFDM 的 QAM 星座。</p>
+<h2 id="6-awgnsnresn0ebn0">6. AWGN、SNR、Es/N0、Eb/N0</h2>
+<p>若单位平均符号能量 Es=1，未编码每符号 k 位，则 <code>N0=1/(k*10^(EbN0dB/10))</code>；复噪声的实部/虚部方差各为 N0/2。lab03 按此构造符号域噪声。</p>
+<p>过采样波形若滤波器归一化为单位能量，平均样点功率约为 Es/SPS；固定 Es/N0 下的样点 SNR 与符号 SNR 相差 <code>10log10(SPS)</code>。但实际换算还要考虑码率、导频、CP、空闲和滤波约定。不要把 symbol-domain 公式原样套到所有波形。</p>
+<p>sm.impair 明确使用<strong>信道处理后全记录平均样点功率</strong>作为 SNR 分母基准。它不是按每个比特能量定义的噪声工具。</p>
+<p><img alt="误码率基准与噪声：独立 Python 参考图" src="../resources/reference_figures/03_noise.png" /></p>
+<h2 id="7-berper">7. BER/PER 的统计可信度</h2>
+<p>低误码区需要更多样本。如果 N 位没有错误，常用近似 95% 置信上界是 3/N。1000 位全对只说明 BER 大致小于 0.003 的量级，不能证明 10^-6。</p>
+<p>建议在每个 SNR 点积累足够错误数（例如至少 100），或达到预定最大样本数后报告统计上界。包检测失败必须计入 PER，不能只对“成功同步的好包”统计。</p>
+<h2 id="8-iq">8. 频偏与 IQ 失衡</h2>
+<p>恒包络信号可用相邻样点共轭积估计瞬时频率：<code>angle(x[n]conj(x[n−1]))Fs/(2π)</code>。接近零幅度处相位不可靠，绘图会屏蔽小幅度区。OFDM 的瞬时相位频率并不直接等于某个子载波频率。</p>
+<p>IQ 增益/相位失衡常导致镜像。用单音作测试更容易量化镜像抑制；用随机宽带调制时，原谱和镜像可能重叠。lab06 是机理模型，不代替硬件校准程序。</p>
+<h2 id="9">9. 仪器上要额外核对</h2>
+<ul>
+<li>采样时钟偏差会引起随时间累积的定时误差，区别于本振 CFO。</li>
+<li>包长、触发、循环边界与空闲会影响捕获是否完整。</li>
+<li>信号源、线缆、衰减器、接收机都可能引入频响与压缩。</li>
+<li>自动增益、自动归一化、自动中心频率估计会掩盖你故意设置的失真，应记录其开关状态。</li>
+<li>认证测试的限值、测量带宽、参考信号和补偿步骤应按对应标准执行；本项目测量函数用于教学和预检。</li>
+</ul></main></div><footer>1.0.0 · 离线教程 · 运行状态以 reports/VALIDATION 与本机测试为准</footer></body></html>

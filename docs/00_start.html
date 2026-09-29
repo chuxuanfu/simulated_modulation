@@ -1,0 +1,100 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>00 · 从这里开始</title><style>
+:root{--ink:#172a3a;--muted:#5c6b78;--accent:#007d83;--line:#dce5ea;--paper:#fff}
+*{box-sizing:border-box}body{margin:0;background:#f1f5f7;color:var(--ink);font:16px/1.85 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+header{background:#142b3a;color:white;padding:24px 6vw;border-bottom:5px solid #20b7ab}header a{color:#96ede6;text-decoration:none}header .tag{font-size:12px;letter-spacing:2px;color:#adcad7}
+.layout{display:grid;grid-template-columns:250px minmax(0,980px);gap:28px;max-width:1330px;margin:32px auto;padding:0 24px}
+nav{position:sticky;top:20px;align-self:start;font-size:14px;max-height:90vh;overflow:auto}nav a{display:block;color:#435b6b;padding:5px 10px;text-decoration:none;border-left:2px solid transparent}nav a:hover{background:#e1eef0;border-color:var(--accent)}
+main{background:var(--paper);padding:40px 48px;border:1px solid var(--line);border-radius:10px;min-width:0}
+h1{font-size:30px;line-height:1.4;margin:0 0 24px}h2{font-size:23px;margin-top:38px;border-bottom:1px solid var(--line);padding-bottom:8px}h3{font-size:19px}a{color:#007b88}p{margin:14px 0}
+pre{padding:18px 20px;background:#122b39;color:#dff7f3;overflow:auto;border-radius:7px;line-height:1.65;font-size:13px}code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}p code,li code,td code{background:#eef3f5;padding:2px 5px;border-radius:3px;font-size:.9em}
+table{border-collapse:collapse;width:100%;font-size:14px;display:block;overflow:auto;margin:22px 0}th,td{border:1px solid var(--line);padding:10px 12px;vertical-align:top}th{background:#eaf3f5;text-align:left}tr:nth-child(even){background:#fafcfd}
+blockquote{border-left:4px solid var(--accent);margin-left:0;padding:2px 20px;background:#eef9f6}img{max-width:100%;height:auto}footer{padding:24px;color:var(--muted);font-size:13px;text-align:center}.toc{background:#f4f8f9;padding:10px 20px;border-radius:6px;font-size:14px}
+@media(max-width:900px){.layout{display:block;padding:0 12px}nav{position:static;max-height:180px;margin-bottom:18px}main{padding:25px 20px}h1{font-size:25px}}
+@media print{header,nav,footer,.toc{display:none}.layout{display:block;margin:0;padding:0}main{border:0;padding:0}pre{background:#eee;color:#111;white-space:pre-wrap}table{display:table;font-size:11px}h2,h3{break-after:avoid}img{max-height:85vh}}
+</style></head><body><header><div class="tag">SIMULATED MODULATION · MATLAB LAB</div><a href="../START_HERE.html">无线调制与波形实验室</a></header><div class="layout"><nav><a href="../README.html">无线调制与波形实验室 · Simulated Modulation</a><a href="../docs/00_start.html">00 · 从这里开始</a><a href="../docs/01_foundations.html">01 · IQ、采样和通信链路</a><a href="../docs/02_modulations.html">02 · 调制与脉冲成形</a><a href="../docs/03_ofdm_coding.html">03 · OFDM、编码与资源分配</a><a href="../docs/04_protocols.html">04 · Cellular、Wi-Fi、Bluetooth、Thread 的联系与区别</a><a href="../docs/05_recipes.html">05 · 参数配方与项目 API</a><a href="../docs/06_labs.html">06 · 15 个循序实验</a><a href="../docs/07_measurement.html">07 · 如何证明波形正确</a><a href="../docs/08_troubleshooting.html">08 · 排错手册</a><a href="../docs/09_advanced.html">09 · 进阶实验与扩展边界</a><a href="../docs/10_gui_simulink.html">10 · MATLAB 图形界面与 Simulink</a><a href="../docs/11_glossary_answers.html">11 · 术语、公式速查与练习答案</a><a href="../sop/01_install.html">SOP-01 · 环境安装与首次验收</a><a href="../sop/02_generate.html">SOP-02 · 生成一份可交付实验的 IQ</a><a href="../sop/03_change_parameters.html">SOP-03 · 修改参数与受控扫描</a><a href="../sop/04_instruments.html">SOP-04 · 从 IQ 文件到实验仪器</a><a href="../sop/05_validate.html">SOP-05 · 验证与验收</a><a href="../sop/06_reproducibility.html">SOP-06 · 复现、归档与版本控制</a><a href="../sop/07_record_template.html">实验记录模板</a><a href="../resources/REFERENCES.html">官方资料与阅读路径</a><a href="../reports/VALIDATION.html">交付验证报告 · 2026-09-29</a></nav><main><h1 id="00">00 · 从这里开始</h1>
+<h2 id="_1">你最后会得到什么</h2>
+<p>你将能解释一份 IQ 数据表示什么、改变调制参数会改变什么、如何选择实验波形，以及如何把 MATLAB 的结果可靠交给仪器。学习顺序不要求你先读完通信原理教材。</p>
+<p>一个完整实验的最小闭环是：确定问题 → 固定参数 → 生成已知数据 → 画图 → 接收或核对结构 → 导出 → 读回 → 记录结论。不要只凭“频谱看起来像”判断生成正确。</p>
+<h2 id="3060">第一次运行：约 30–60 分钟</h2>
+<ol>
+<li>安装/打开 MATLAB。在 Home → Add-Ons 或 MathWorks 安装器中查看已装产品。有 MATLAB 使用权限不代表每个工具箱也已授权。</li>
+<li>在 MATLAB 当前文件夹定位到 <code>~/simulated_modulation</code>。<code>~</code> 在操作系统文件路径中表示家目录；MATLAB 脚本里优先使用 <code>fullfile(getenv('HOME'),...)</code>。</li>
+<li>运行 <code>setup</code>。它只添加本会话路径，不修改全局 <code>startup.m</code> 或永久搜索路径。</li>
+<li>运行 <code>check_environment</code>，打开 <code>reports/environment.json</code>。Present=true 只表示入口存在，实际调用才验证许可证可用。</li>
+<li>运行 <code>run_tests('core')</code>。必须没有 FAIL。如果报错，先读 <a href="08_troubleshooting.html">排错</a>。</li>
+<li>运行 <code>lab01_iq_sampling</code> 和 <code>lab02_constellation_rrc</code>。查看 <code>reports/figures/</code>。</li>
+<li>运行下面的 QPSK 实验，找到新建的 <code>generated/basic_...</code> 目录。</li>
+</ol>
+<pre><code class="language-matlab">p = sm.defaultConfig('basic');
+p.Modulation = 'QPSK';
+p.SymbolRateHz = 1e6;
+p.SamplesPerSymbol = 8;
+w = generate_waveform(p);
+</code></pre>
+<p>应该得到 8 MS/s 的复数基带。基带中心是 0 Hz；现在没有向空气或设备发射任何信号。</p>
+<h2 id="_2">第二次运行：得到你的目标协议</h2>
+<p>先检查对应工具箱，再选一项：</p>
+<pre><code class="language-matlab">w = generate_waveform(sm.defaultConfig('wifi_he'));
+w = generate_waveform(sm.defaultConfig('ble'));
+w = generate_waveform(sm.defaultConfig('thread'));
+w = generate_waveform(sm.defaultConfig('lte_dl'));
+w = generate_waveform(sm.defaultConfig('nr_dl'));
+</code></pre>
+<p>每次只运行你需要的一行。要一次生成全部已支持预设，使用 <code>run_all('all')</code>，但先做 <code>run_tests('all')</code>。完整测试中 SKIP 表示功能缺失，FAIL 表示已有入口但运行出错，需要解决。</p>
+<h2 id="_3">怎样打开输出</h2>
+<ul>
+<li><code>overview.png</code>：时域 I/Q、包络、PSD、时间样点散点、瞬时频率、时频图。</li>
+<li><code>waveform.mat</code>：<code>w.iq</code> 是生成器原始幅度；<code>iqExport</code> 是统一缩放到峰值 0.8 的导出数据；<code>exportGain</code> 是乘数。</li>
+<li><code>manifest.json</code>：采样率、RF 中心频率意图、通道数、持续时间、种子、作用范围、导出增益和读回误差。</li>
+<li><code>channel_01.sigmf-data</code>：复数 float32，小端，每个样点先 I 后 Q，无文件头。</li>
+<li><code>channel_01.sigmf-meta</code>：配套 SigMF 元数据。</li>
+<li><code>channel_01.ci16</code>：复数 int16，小端，反量化除以 32767。</li>
+</ul>
+<p>普通音频播放器无法正确播放 IQ。不要把它当立体声音频 WAV 导入设备。</p>
+<h2 id="_4">最低验收</h2>
+<ul>
+<li>核对生成的 <code>fs</code> 与 manifest 一致。</li>
+<li>核对采样点数：<code>size(w.iq,1)</code>；时长是点数除以采样率。</li>
+<li>检查复数数据非全零、没有 NaN/Inf。</li>
+<li>确认读回误差落在导出脚本的阈值内。</li>
+<li>对 Wi-Fi non-HT、BLE、NR 原理链路分别运行 lab07、lab08、lab10；Thread 运行 lab09 检查 FCS 与时长。</li>
+<li>读 Scope。不要把物理层测试包当成可以连接手机、基站或 Thread 边界路由器的完整系统。</li>
+</ul>
+<h2 id="_5">学习节奏</h2>
+<table>
+<thead>
+<tr>
+<th>阶段</th>
+<th>内容</th>
+<th>产出</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>lab01–03，IQ、星座、RRC、噪声</td>
+<td>能说清 sample/symbol/bit 的区别</td>
+</tr>
+<tr>
+<td>2</td>
+<td>lab04–06，OFDM、恒包络、失真</td>
+<td>能解释星座和频谱为什么变化</td>
+</tr>
+<tr>
+<td>3</td>
+<td>lab07–10，协议帧与接收</td>
+<td>能核对实际 PHY 包与资源格</td>
+</tr>
+<tr>
+<td>4</td>
+<td>lab11–13，PAPR、文件格式、扩频</td>
+<td>能准备可复现实验文件</td>
+</tr>
+<tr>
+<td>5</td>
+<td>lab14–15，混合信号、OFDMA，仪器 SOP</td>
+<td>能设计具体实验并记录限制</td>
+</tr>
+</tbody>
+</table>
+<p>不要把阅读速度当进度：每一阶段至少自己修改一个参数，并在运行前写下预期变化。</p></main></div><footer>1.0.0 · 离线教程 · 运行状态以 reports/VALIDATION 与本机测试为准</footer></body></html>

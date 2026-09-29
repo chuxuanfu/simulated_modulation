@@ -1,0 +1,75 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>06 · 15 个循序实验</title><style>
+:root{--ink:#172a3a;--muted:#5c6b78;--accent:#007d83;--line:#dce5ea;--paper:#fff}
+*{box-sizing:border-box}body{margin:0;background:#f1f5f7;color:var(--ink);font:16px/1.85 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+header{background:#142b3a;color:white;padding:24px 6vw;border-bottom:5px solid #20b7ab}header a{color:#96ede6;text-decoration:none}header .tag{font-size:12px;letter-spacing:2px;color:#adcad7}
+.layout{display:grid;grid-template-columns:250px minmax(0,980px);gap:28px;max-width:1330px;margin:32px auto;padding:0 24px}
+nav{position:sticky;top:20px;align-self:start;font-size:14px;max-height:90vh;overflow:auto}nav a{display:block;color:#435b6b;padding:5px 10px;text-decoration:none;border-left:2px solid transparent}nav a:hover{background:#e1eef0;border-color:var(--accent)}
+main{background:var(--paper);padding:40px 48px;border:1px solid var(--line);border-radius:10px;min-width:0}
+h1{font-size:30px;line-height:1.4;margin:0 0 24px}h2{font-size:23px;margin-top:38px;border-bottom:1px solid var(--line);padding-bottom:8px}h3{font-size:19px}a{color:#007b88}p{margin:14px 0}
+pre{padding:18px 20px;background:#122b39;color:#dff7f3;overflow:auto;border-radius:7px;line-height:1.65;font-size:13px}code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}p code,li code,td code{background:#eef3f5;padding:2px 5px;border-radius:3px;font-size:.9em}
+table{border-collapse:collapse;width:100%;font-size:14px;display:block;overflow:auto;margin:22px 0}th,td{border:1px solid var(--line);padding:10px 12px;vertical-align:top}th{background:#eaf3f5;text-align:left}tr:nth-child(even){background:#fafcfd}
+blockquote{border-left:4px solid var(--accent);margin-left:0;padding:2px 20px;background:#eef9f6}img{max-width:100%;height:auto}footer{padding:24px;color:var(--muted);font-size:13px;text-align:center}.toc{background:#f4f8f9;padding:10px 20px;border-radius:6px;font-size:14px}
+@media(max-width:900px){.layout{display:block;padding:0 12px}nav{position:static;max-height:180px;margin-bottom:18px}main{padding:25px 20px}h1{font-size:25px}}
+@media print{header,nav,footer,.toc{display:none}.layout{display:block;margin:0;padding:0}main{border:0;padding:0}pre{background:#eee;color:#111;white-space:pre-wrap}table{display:table;font-size:11px}h2,h3{break-after:avoid}img{max-height:85vh}}
+</style></head><body><header><div class="tag">SIMULATED MODULATION · MATLAB LAB</div><a href="../START_HERE.html">无线调制与波形实验室</a></header><div class="layout"><nav><a href="../README.html">无线调制与波形实验室 · Simulated Modulation</a><a href="../docs/00_start.html">00 · 从这里开始</a><a href="../docs/01_foundations.html">01 · IQ、采样和通信链路</a><a href="../docs/02_modulations.html">02 · 调制与脉冲成形</a><a href="../docs/03_ofdm_coding.html">03 · OFDM、编码与资源分配</a><a href="../docs/04_protocols.html">04 · Cellular、Wi-Fi、Bluetooth、Thread 的联系与区别</a><a href="../docs/05_recipes.html">05 · 参数配方与项目 API</a><a href="../docs/06_labs.html">06 · 15 个循序实验</a><a href="../docs/07_measurement.html">07 · 如何证明波形正确</a><a href="../docs/08_troubleshooting.html">08 · 排错手册</a><a href="../docs/09_advanced.html">09 · 进阶实验与扩展边界</a><a href="../docs/10_gui_simulink.html">10 · MATLAB 图形界面与 Simulink</a><a href="../docs/11_glossary_answers.html">11 · 术语、公式速查与练习答案</a><a href="../sop/01_install.html">SOP-01 · 环境安装与首次验收</a><a href="../sop/02_generate.html">SOP-02 · 生成一份可交付实验的 IQ</a><a href="../sop/03_change_parameters.html">SOP-03 · 修改参数与受控扫描</a><a href="../sop/04_instruments.html">SOP-04 · 从 IQ 文件到实验仪器</a><a href="../sop/05_validate.html">SOP-05 · 验证与验收</a><a href="../sop/06_reproducibility.html">SOP-06 · 复现、归档与版本控制</a><a href="../sop/07_record_template.html">实验记录模板</a><a href="../resources/REFERENCES.html">官方资料与阅读路径</a><a href="../reports/VALIDATION.html">交付验证报告 · 2026-09-29</a></nav><main><h1 id="06-15">06 · 15 个循序实验</h1>
+<p>所有命令在项目根目录运行 <code>setup</code> 后执行。图像通常在 <code>reports/figures/</code>，部分完整波形图在 <code>reports/</code>，IQ 包在 <code>generated/</code>。下面的数值是理论预期或程序验收条件；交付并未把它们标成 MATLAB 实测结果。</p>
+<h2 id="lab-01-iq-matlab">Lab 01 · IQ 与采样（MATLAB）</h2>
+<p><strong>问题：</strong> 为什么一个复数信号可以区分正负频率？</p>
+<p>运行 <code>r=lab01_iq_sampling</code>。I 是余弦，Q 是正弦；峰应在 +125 kHz。fs=1 MHz 时，+1.125 MHz 的离散样点与 +125 kHz 相同。</p>
+<p>验收：PeakHz=125000，AliasingMaxError&lt;1e-8。练习：给 Q 加负号，峰应镜像到 −125 kHz。记录改变的是频率方向，而非带宽。</p>
+<h2 id="lab-02-16qam-matlab">Lab 02 · 从 16QAM 波形恢复星座（MATLAB）</h2>
+<p>运行 <code>r=lab02_constellation_rrc</code>。左图画全部时间样点，右图画发射+匹配滤波后按正确时刻采样的点。</p>
+<p>验收：无噪声 BER=0，EVM 很小但有限长 RRC 不保证精确为零。代码默认 12-symbol span、SPS=8，因此合计滤波延迟 96 样点。</p>
+<p>练习：把抽样索引移动 1、2、4 点；EVM 如何变化？把 rolloff 改为 0.1 时，需要更长滤波器才能接近理想。不要把 BER=0 解读为模拟波形完全无误差。</p>
+<h2 id="lab-03-ber-ebn0matlab">Lab 03 · BER 与 Eb/N0（MATLAB）</h2>
+<p>运行 <code>r=lab03_ber_awgn</code>。比较 BPSK、QPSK、16QAM。BPSK 和 Gray QPSK 的比特误码率理论曲线重合：<code>Pb=0.5*erfc(sqrt(Eb/N0))</code>。</p>
+<p>验收：Eb/N0=0 dB 时 BPSK/QPSK BER 应在约 0.07865 附近；程序容差 0.003。低误码区可能观察到 0 个错误，不能称 BER=0；报告给出近似 95% 上界 3/Nbit。</p>
+<p>练习：分别固定 Es/N0 与 Eb/N0 比较 QPSK。解释为什么两种比较看起来不同。本实验在符号域加噪声，不涉及过采样修正。</p>
+<h2 id="lab-04-cp-matlab">Lab 04 · CP 足够与不足（MATLAB）</h2>
+<p>运行 <code>r=lab04_ofdm_cp</code>。CP=32 样点，对照最大延迟 8 与 48 样点的双径信道；使用已知 H 做均衡。</p>
+<p>验收：短延迟 EVM 接近浮点误差（&lt;1e-9%），长延迟 EVM&gt;1%。练习：将 Ncp 增至 64，应改善第二种情况，但有效传输效率降低；解释速率损失。</p>
+<h2 id="lab-05-gfsk-oqpskmatlab">Lab 05 · GFSK 和半正弦 OQPSK（MATLAB）</h2>
+<p>运行 <code>r=lab05_gfsk_oqpsk</code>，看包络和瞬时频率。GFSK 包络误差应&lt;1e-12；OQPSK 去除首尾后也接近单位包络。</p>
+<p>练习：GFSK 的 BT 从 0.5 改到 0.3/0.8，h 从 0.5 改到 0.32。记录频谱与频率过渡的变化。此时生成的仍是教学波形，不能声称变成了完整蓝牙 BR 包。</p>
+<h2 id="lab-06-matlab">Lab 06 · 四种常见失真（MATLAB）</h2>
+<p>运行 <code>r=lab06_impairments</code>。四幅图分别为 AWGN、CFO、IQ 不平衡和削顶后的判决样点。</p>
+<p>验收：AWGN 产生点云；CFO 随时间旋转；IQ 不平衡拉伸/倾斜；削顶导致非线性偏差和频谱外溢。默认 EVM 不消除增益/相位，方便看见全部人为失真。</p>
+<p>练习：仅加固定 PhaseDeg，与 CFO 比较。单个复增益可以消除固定旋转，却不能消除整段随时间变化的频偏。</p>
+<h2 id="lab-07-wi-fi-wlan-toolbox">Lab 07 · Wi-Fi 物理层回环（WLAN Toolbox）</h2>
+<p>运行 <code>r=lab07_wifi_receive</code>。生成一个 non-HT 包 → 用已知字段索引取 L-LTF → 估计信道 → 取 Data → 恢复 PSDU。</p>
+<p>验收：BitErrors=0；图中恢复出数据子载波星座。此示例已知包开始时刻，没有模拟搜索未知 RF 包的同步过程。</p>
+<p>练习：MCS=0 改为 4/6，观察星座；再加少量噪声。添加 CFO 之前，先实现/理解频偏估计，否则失效并不是调制映射器错了。</p>
+<h2 id="lab-08-ble-pdubluetooth-toolbox">Lab 08 · BLE 物理层和广播 PDU（Bluetooth Toolbox）</h2>
+<p>运行 <code>r=lab08_ble_receive</code>。读取默认广播包，经过理想接收器恢复位，再经过 LL 解码校验。</p>
+<p>验收：BitErrors=0，LLStatus=Success。只把 PHY 比特恢复成功不能验证随机 CRC 有效，所以本课同时检查 LL 解码。</p>
+<p>练习：改广播名称，对比包长；改 ChannelIndex 时同步改 fc；尝试接收端白化信道故意配错，说明为什么频谱仍正常但解码会错。</p>
+<h2 id="lab-09-thread-802154-communications-toolbox">Lab 09 · Thread 所用 802.15.4 帧（Communications Toolbox）</h2>
+<p>运行 <code>r=lab09_thread_frame</code>。查看 PSDU 字节、FCS 和包长。默认 PSDU=43 字节，名义发送时长 1.568 ms，加短成形尾部。</p>
+<p>验收：CRC 的检查残余为 0；实际波形时长与名义值差&lt;10 μs。该测试只检查 MAC/FCS/时长，没有独立的 802.15.4 无线接收解码器，因此仍需仪器/接收机完成互操作验证。</p>
+<p>练习：PayloadBytes=16/64/116，画时长随载荷的关系；每增加一字节名义增加 32 μs。信道间隔 5 MHz 与实际信号带宽不是一回事。</p>
+<h2 id="lab-10-5g-5g-toolbox">Lab 10 · 5G 资源格到比特（5G Toolbox）</h2>
+<p>运行 <code>r=lab10_nr_resource_grid</code>。该课以低层 API 显式建立 PDSCH 和 DM-RS，做 OFDM 调制、解调和解扰恢复。</p>
+<p>验收：CodewordBitErrors=0、EVM&lt;1e-8%。本课输入是未经过传输块信道编码的 codeword 测试位；不同于默认 <code>nr_dl</code> 完整生成器中启用的 DL-SCH 编码。这里检验的是映射链，不是 LDPC 解码性能。</p>
+<p>练习：改变调制阶数和 PRB 分配，观察资源格；加一个已知复增益，补偿后恢复。下一步才能引入 DM-RS 信道估计和真实未知信道。</p>
+<h2 id="lab-11-papr-dft-matlab">Lab 11 · PAPR 与 DFT 预编码（MATLAB）</h2>
+<p>运行 <code>r=lab11_papr_dftspread</code>。比较同一块 QPSK 数据的 OFDM/DFT-s-OFDM，查看经验 CCDF。</p>
+<p>验收：能解释 CCDF 表示功率超过阈值的比例；不把单次峰值当所有配置的理论界。此图按现有样点计算，连续时间峰值需要适当过采样才能更准确估计。</p>
+<p>练习：改变激活子载波数、数据长度和调制，记录 PAPR 随机波动；讨论为了减少削顶要留下多少输出回退。</p>
+<h2 id="lab-12-iq-matlab">Lab 12 · IQ 文件格式闭环（MATLAB）</h2>
+<p>运行 <code>r=lab12_export_import</code>。导出 float32/int16、元数据并读回；用 exportGain 恢复原始幅度。</p>
+<p>验收：误差在量化容差内，float 文件为每复样点 8 字节，int16 文件为每复样点 4 字节。I/Q 交织为 I0,Q0,I1,Q1。</p>
+<p>练习：若把样本率故意设成两倍，播放时长和所有频偏分别怎样变化？答案：时长减半、频率尺度翻倍。</p>
+<h2 id="lab-13-matlab">Lab 13 · 扩频、跳频和扫频（MATLAB）</h2>
+<p>运行 <code>r=lab13_dsss_fhss_chirp</code>。三张时频图分别表现较宽的 DSSS、阶梯跳频 FHSS、连续扫频 chirp。</p>
+<p>验收：无噪声 DSSS 解扩误差为 0；31-chip 码的理想处理增益约 14.91 dB。代码并未使用 IEEE 标准码表、Bluetooth 跳频调度或完整 LoRa PHY。</p>
+<p>练习：在解扩前加窄带单音，比较正确码与错误码相关结果。不要把处理增益直接当任何实际接收机的抗干扰保证。</p>
+<h2 id="lab-14-wlan-bluetooth-communications-signal-processing">Lab 14 · 多协议共存混合（WLAN + Bluetooth + Communications + Signal Processing）</h2>
+<p>运行 <code>w=lab14_coexistence</code>。统一到 40 MS/s，Wi-Fi 在 DC，BLE 在 +12 MHz，802.15.4 在 −12 MHz，分量相对功率 0/−10/−15 dB。</p>
+<p>验收：频谱中能分辨三部分，没有搬出 Nyquist 区间。当前放置是合成场景，不是自动匹配各标准信道表；分量功率按各自包含空闲的完整记录平均定义。</p>
+<p>练习：让 BLE 向 Wi-Fi 内移动；另接一个受害者接收器测 PER/BER，再下结论。仅看到频谱重叠不能量化接收损失。</p>
+<h2 id="lab-15-wi-fi-ofdmawlan-toolbox">Lab 15 · Wi-Fi OFDMA（WLAN Toolbox）</h2>
+<p>运行 <code>w=lab15_wlan_ofdma</code>。HE MU 20 MHz 配成九个 26-tone RU，每个用户独立载荷。</p>
+<p>验收：生成器接受配置并输出非零波形；查看 <code>w.details.PHYConfig</code>。可以运行 <code>showAllocation(w.details.PHYConfig)</code> 检查资源分配。</p>
+<p>练习：每次只修改一个用户 MCS/APEP；解释为什么物理包总时长与每个用户载荷之间要协调。</p>
+<h2 id="_1">每课的实验记录格式</h2>
+<p>复制 <a href="../sop/07_record_template.html">实验记录模板</a>。最少填写：问题、预测、输入参数、软件版本、输出目录、观察图、测量口径、结论、失败现象、下一步。优先写“在此配置和测量口径下观察到什么”，而不是“某技术永远更好”。</p></main></div><footer>1.0.0 · 离线教程 · 运行状态以 reports/VALIDATION 与本机测试为准</footer></body></html>

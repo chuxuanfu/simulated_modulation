@@ -1,0 +1,6 @@
+{
+  "Protocol": "lte_ul",
+  "RC": "A1-3",
+  "NumSubframes": 10,
+  "Seed": 42
+}

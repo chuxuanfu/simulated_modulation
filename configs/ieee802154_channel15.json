@@ -1,0 +1,7 @@
+{
+  "Protocol": "thread",
+  "Channel": 15,
+  "CenterFrequencyHz": 2425000000.0,
+  "PayloadBytes": 32,
+  "Seed": 42
+}

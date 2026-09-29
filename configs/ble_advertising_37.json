@@ -1,0 +1,7 @@
+{
+  "Protocol": "ble",
+  "Mode": "LE1M",
+  "ChannelIndex": 37,
+  "CenterFrequencyHz": 2402000000.0,
+  "Seed": 42
+}

@@ -1,0 +1,147 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>11 · 术语、公式速查与练习答案</title><style>
+:root{--ink:#172a3a;--muted:#5c6b78;--accent:#007d83;--line:#dce5ea;--paper:#fff}
+*{box-sizing:border-box}body{margin:0;background:#f1f5f7;color:var(--ink);font:16px/1.85 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+header{background:#142b3a;color:white;padding:24px 6vw;border-bottom:5px solid #20b7ab}header a{color:#96ede6;text-decoration:none}header .tag{font-size:12px;letter-spacing:2px;color:#adcad7}
+.layout{display:grid;grid-template-columns:250px minmax(0,980px);gap:28px;max-width:1330px;margin:32px auto;padding:0 24px}
+nav{position:sticky;top:20px;align-self:start;font-size:14px;max-height:90vh;overflow:auto}nav a{display:block;color:#435b6b;padding:5px 10px;text-decoration:none;border-left:2px solid transparent}nav a:hover{background:#e1eef0;border-color:var(--accent)}
+main{background:var(--paper);padding:40px 48px;border:1px solid var(--line);border-radius:10px;min-width:0}
+h1{font-size:30px;line-height:1.4;margin:0 0 24px}h2{font-size:23px;margin-top:38px;border-bottom:1px solid var(--line);padding-bottom:8px}h3{font-size:19px}a{color:#007b88}p{margin:14px 0}
+pre{padding:18px 20px;background:#122b39;color:#dff7f3;overflow:auto;border-radius:7px;line-height:1.65;font-size:13px}code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}p code,li code,td code{background:#eef3f5;padding:2px 5px;border-radius:3px;font-size:.9em}
+table{border-collapse:collapse;width:100%;font-size:14px;display:block;overflow:auto;margin:22px 0}th,td{border:1px solid var(--line);padding:10px 12px;vertical-align:top}th{background:#eaf3f5;text-align:left}tr:nth-child(even){background:#fafcfd}
+blockquote{border-left:4px solid var(--accent);margin-left:0;padding:2px 20px;background:#eef9f6}img{max-width:100%;height:auto}footer{padding:24px;color:var(--muted);font-size:13px;text-align:center}.toc{background:#f4f8f9;padding:10px 20px;border-radius:6px;font-size:14px}
+@media(max-width:900px){.layout{display:block;padding:0 12px}nav{position:static;max-height:180px;margin-bottom:18px}main{padding:25px 20px}h1{font-size:25px}}
+@media print{header,nav,footer,.toc{display:none}.layout{display:block;margin:0;padding:0}main{border:0;padding:0}pre{background:#eee;color:#111;white-space:pre-wrap}table{display:table;font-size:11px}h2,h3{break-after:avoid}img{max-height:85vh}}
+</style></head><body><header><div class="tag">SIMULATED MODULATION · MATLAB LAB</div><a href="../START_HERE.html">无线调制与波形实验室</a></header><div class="layout"><nav><a href="../README.html">无线调制与波形实验室 · Simulated Modulation</a><a href="../docs/00_start.html">00 · 从这里开始</a><a href="../docs/01_foundations.html">01 · IQ、采样和通信链路</a><a href="../docs/02_modulations.html">02 · 调制与脉冲成形</a><a href="../docs/03_ofdm_coding.html">03 · OFDM、编码与资源分配</a><a href="../docs/04_protocols.html">04 · Cellular、Wi-Fi、Bluetooth、Thread 的联系与区别</a><a href="../docs/05_recipes.html">05 · 参数配方与项目 API</a><a href="../docs/06_labs.html">06 · 15 个循序实验</a><a href="../docs/07_measurement.html">07 · 如何证明波形正确</a><a href="../docs/08_troubleshooting.html">08 · 排错手册</a><a href="../docs/09_advanced.html">09 · 进阶实验与扩展边界</a><a href="../docs/10_gui_simulink.html">10 · MATLAB 图形界面与 Simulink</a><a href="../docs/11_glossary_answers.html">11 · 术语、公式速查与练习答案</a><a href="../sop/01_install.html">SOP-01 · 环境安装与首次验收</a><a href="../sop/02_generate.html">SOP-02 · 生成一份可交付实验的 IQ</a><a href="../sop/03_change_parameters.html">SOP-03 · 修改参数与受控扫描</a><a href="../sop/04_instruments.html">SOP-04 · 从 IQ 文件到实验仪器</a><a href="../sop/05_validate.html">SOP-05 · 验证与验收</a><a href="../sop/06_reproducibility.html">SOP-06 · 复现、归档与版本控制</a><a href="../sop/07_record_template.html">实验记录模板</a><a href="../resources/REFERENCES.html">官方资料与阅读路径</a><a href="../reports/VALIDATION.html">交付验证报告 · 2026-09-29</a></nav><main><h1 id="11">11 · 术语、公式速查与练习答案</h1>
+<h2 id="_1">术语</h2>
+<table>
+<thead>
+<tr>
+<th>缩写</th>
+<th>中文理解</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IQ / complex baseband</td>
+<td>同相/正交坐标，复数基带</td>
+</tr>
+<tr>
+<td>PHY / MAC</td>
+<td>物理层 / 媒体访问控制层</td>
+</tr>
+<tr>
+<td>PPDU / PSDU</td>
+<td>物理层完整包 / 交给物理层的服务数据单元</td>
+</tr>
+<tr>
+<td>PDU / SDU</td>
+<td>某层处理后的协议单元 / 上层交给它的数据单元</td>
+</tr>
+<tr>
+<td>APEP</td>
+<td>聚合 MAC 包在 EOF 填充前的长度概念</td>
+</tr>
+<tr>
+<td>RRC / RC</td>
+<td>根升余弦 / 升余弦</td>
+</tr>
+<tr>
+<td>FEC / CRC / FCS</td>
+<td>前向纠错 / 循环冗余校验 / 帧校验序列</td>
+</tr>
+<tr>
+<td>MCS</td>
+<td>调制和编码方案索引</td>
+</tr>
+<tr>
+<td>FFT / IFFT</td>
+<td>快速傅里叶变换及其逆变换</td>
+</tr>
+<tr>
+<td>CP / GI</td>
+<td>循环前缀 / 保护间隔</td>
+</tr>
+<tr>
+<td>SCS / PRB / BWP</td>
+<td>子载波间隔 / 物理资源块 / 带宽部分</td>
+</tr>
+<tr>
+<td>RU</td>
+<td>Wi-Fi OFDMA 资源单元</td>
+</tr>
+<tr>
+<td>DM-RS / PT-RS</td>
+<td>解调参考信号 / 相位跟踪参考信号</td>
+</tr>
+<tr>
+<td>PDSCH / PUSCH</td>
+<td>NR/LTE 下行 / 上行共享物理信道</td>
+</tr>
+<tr>
+<td>SSB / PDCCH</td>
+<td>同步信号块 / 下行控制物理信道</td>
+</tr>
+<tr>
+<td>CFO / SFO</td>
+<td>载波频偏 / 采样频率偏差</td>
+</tr>
+<tr>
+<td>EVM / BER / BLER / PER</td>
+<td>误差矢量幅度 / 比特 / 块 / 包错误率</td>
+</tr>
+<tr>
+<td>PAPR / CCDF / OBW</td>
+<td>峰均比 / 互补累计分布 / 占用带宽</td>
+</tr>
+<tr>
+<td>DSSS / FHSS</td>
+<td>直接序列扩频 / 跳频扩频</td>
+</tr>
+<tr>
+<td>BR / EDR / LE</td>
+<td>蓝牙基本速率 / 增强数据速率 / 低功耗</td>
+</tr>
+<tr>
+<td>RMC</td>
+<td>参考测量信道</td>
+</tr>
+</tbody>
+</table>
+<h2 id="_2">公式卡</h2>
+<pre><code class="language-text">持续时间             T = Nsamples/Fs
+未编码单载波         Rb = Rs log2(M)
+采样率               Fs = Rs * SPS
+RRC 理想支撑带宽     B = (1+rolloff)*Rs
+OFDM 子载波间隔      Δf = Fs/Nfft
+OFDM 总符号时长      Ts = (Nfft+Ncp)/Fs
+PRB 名义跨度         Bprb = 12*Δf
+GFSK 调制指数        h = 2*Δf_peak/Rs
+数字平均功率         P = mean(abs(x).^2)
+幅度缩放             y = x*10^(gainDB/20)
+PAPR                 10log10(max(abs(x).^2)/mean(abs(x).^2))
+EVM%                 100sqrt(sum(abs(rx-ref).^2)/sum(abs(ref).^2))
+BPSK / Gray QPSK BER 0.5*erfc(sqrt(Eb/N0))，未编码、理想同步、AWGN
+零错误置信上界       约 3/N，95% 近似
+</code></pre>
+<h2 id="_3">基础问答</h2>
+<p><strong>16QAM 的时域点为什么不止 16 个？</strong> 成形滤波叠加多个相邻符号，时间样点不是判决时刻的独立符号。匹配滤波并正确抽样后才回到星座点附近。</p>
+<p><strong>GFSK 的相位为什么连续？</strong> 频率序列经过积分成为相位；高斯平滑使频率过渡更平缓。位改变不是瞬间任意重置相位。</p>
+<p><strong>RRC 延迟为何随长度增加？</strong> 线性相位对称 FIR 的群延迟为 <code>(L−1)/2</code>。两级同长度滤波相加。</p>
+<p><strong>OQPSK 为什么容易差一倍？</strong> 串行码片事件速率、I/Q 各支路更新速率、成形 chip pulse 的参数命名并不相同。应把时间定义写清，并用实际帧时长交叉核对。</p>
+<p><strong>64QAM 总是比 QPSK 快吗？</strong> 每个符号携带更多映射位，但还受码率、SNR、重传、前导和调度影响。有效吞吐不一定更高。</p>
+<p><strong>采样率升到两倍会使真实信号带宽两倍吗？</strong> 正确插值重采样且保持时长时不会。若仅改元数据/播放时钟而不变样点数，时间缩短一半，频率尺度才会翻倍。</p>
+<p><strong>CP 足够为什么还需均衡？</strong> CP 使卷积可以在 FFT 后表示为逐子载波乘 H[k]，并没有消掉 H[k]。</p>
+<p><strong>Thread 与 Zigbee 是同一种信号吗？</strong> 可以使用共同的 2.4GHz 802.15.4 PHY；上层帧语义、安全、组网和应用体系不同。</p>
+<p><strong>BLE125K 能直接把采样率设成 125k×SPS 吗？</strong> 不行。125K 是编码后的信息速率标签，空口 GFSK 符号速率仍是 1 Msym/s。</p>
+<p><strong>IQ 振幅 0.8 对应多少 dBm？</strong> 单靠数字幅度无法确定。需要仪器输出标定、归一化方式、链路损耗与负载定义。</p>
+<h2 id="_4">计算练习答案</h2>
+<ol>
+<li>16QAM，Rs=2 MHz，SPS=8，α=0.25：Fs=16 MS/s，映射位速率=8 Mbit/s，理想支撑带宽=2.5 MHz。</li>
+<li>Nfft=1024，Fs=30.72 MHz：Δf=30 kHz，有效符号时长=33.333 μs；还需要 CP 长度才能算总时长。</li>
+<li>10 ms、20 MS/s、单通道 cf32：200000 复样点，1,600,000 字节；双通道分文件则每路相同，总计 3,200,000 字节。</li>
+<li>Thread 信道 20：2450 MHz；注意配置对象 Band=2450 指工作频段，不是唯一的信道中心。</li>
+<li>51 PRB、30 kHz：资源跨度 18.36 MHz，不等于 20 MHz 名义信道带宽，也不保证采样率等于任一数值。</li>
+<li>300000 位、零错误：近似 95% BER 上界为 10^-5，不足以证明 BER&lt;10^-6。</li>
+<li>幅度乘 0.5：数字平均功率 −6.02 dB；PAPR 不变，前提是同一统计区间且没有量化/限幅影响。</li>
+<li>任一 8 MS/s IQ 文件错误地以 16 MS/s 播放：时长减半、基带谱宽和所有数字频偏翻倍。</li>
+</ol></main></div><footer>1.0.0 · 离线教程 · 运行状态以 reports/VALIDATION 与本机测试为准</footer></body></html>

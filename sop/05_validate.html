@@ -1,0 +1,66 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>SOP-05 · 验证与验收</title><style>
+:root{--ink:#172a3a;--muted:#5c6b78;--accent:#007d83;--line:#dce5ea;--paper:#fff}
+*{box-sizing:border-box}body{margin:0;background:#f1f5f7;color:var(--ink);font:16px/1.85 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+header{background:#142b3a;color:white;padding:24px 6vw;border-bottom:5px solid #20b7ab}header a{color:#96ede6;text-decoration:none}header .tag{font-size:12px;letter-spacing:2px;color:#adcad7}
+.layout{display:grid;grid-template-columns:250px minmax(0,980px);gap:28px;max-width:1330px;margin:32px auto;padding:0 24px}
+nav{position:sticky;top:20px;align-self:start;font-size:14px;max-height:90vh;overflow:auto}nav a{display:block;color:#435b6b;padding:5px 10px;text-decoration:none;border-left:2px solid transparent}nav a:hover{background:#e1eef0;border-color:var(--accent)}
+main{background:var(--paper);padding:40px 48px;border:1px solid var(--line);border-radius:10px;min-width:0}
+h1{font-size:30px;line-height:1.4;margin:0 0 24px}h2{font-size:23px;margin-top:38px;border-bottom:1px solid var(--line);padding-bottom:8px}h3{font-size:19px}a{color:#007b88}p{margin:14px 0}
+pre{padding:18px 20px;background:#122b39;color:#dff7f3;overflow:auto;border-radius:7px;line-height:1.65;font-size:13px}code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}p code,li code,td code{background:#eef3f5;padding:2px 5px;border-radius:3px;font-size:.9em}
+table{border-collapse:collapse;width:100%;font-size:14px;display:block;overflow:auto;margin:22px 0}th,td{border:1px solid var(--line);padding:10px 12px;vertical-align:top}th{background:#eaf3f5;text-align:left}tr:nth-child(even){background:#fafcfd}
+blockquote{border-left:4px solid var(--accent);margin-left:0;padding:2px 20px;background:#eef9f6}img{max-width:100%;height:auto}footer{padding:24px;color:var(--muted);font-size:13px;text-align:center}.toc{background:#f4f8f9;padding:10px 20px;border-radius:6px;font-size:14px}
+@media(max-width:900px){.layout{display:block;padding:0 12px}nav{position:static;max-height:180px;margin-bottom:18px}main{padding:25px 20px}h1{font-size:25px}}
+@media print{header,nav,footer,.toc{display:none}.layout{display:block;margin:0;padding:0}main{border:0;padding:0}pre{background:#eee;color:#111;white-space:pre-wrap}table{display:table;font-size:11px}h2,h3{break-after:avoid}img{max-height:85vh}}
+</style></head><body><header><div class="tag">SIMULATED MODULATION · MATLAB LAB</div><a href="../START_HERE.html">无线调制与波形实验室</a></header><div class="layout"><nav><a href="../README.html">无线调制与波形实验室 · Simulated Modulation</a><a href="../docs/00_start.html">00 · 从这里开始</a><a href="../docs/01_foundations.html">01 · IQ、采样和通信链路</a><a href="../docs/02_modulations.html">02 · 调制与脉冲成形</a><a href="../docs/03_ofdm_coding.html">03 · OFDM、编码与资源分配</a><a href="../docs/04_protocols.html">04 · Cellular、Wi-Fi、Bluetooth、Thread 的联系与区别</a><a href="../docs/05_recipes.html">05 · 参数配方与项目 API</a><a href="../docs/06_labs.html">06 · 15 个循序实验</a><a href="../docs/07_measurement.html">07 · 如何证明波形正确</a><a href="../docs/08_troubleshooting.html">08 · 排错手册</a><a href="../docs/09_advanced.html">09 · 进阶实验与扩展边界</a><a href="../docs/10_gui_simulink.html">10 · MATLAB 图形界面与 Simulink</a><a href="../docs/11_glossary_answers.html">11 · 术语、公式速查与练习答案</a><a href="../sop/01_install.html">SOP-01 · 环境安装与首次验收</a><a href="../sop/02_generate.html">SOP-02 · 生成一份可交付实验的 IQ</a><a href="../sop/03_change_parameters.html">SOP-03 · 修改参数与受控扫描</a><a href="../sop/04_instruments.html">SOP-04 · 从 IQ 文件到实验仪器</a><a href="../sop/05_validate.html">SOP-05 · 验证与验收</a><a href="../sop/06_reproducibility.html">SOP-06 · 复现、归档与版本控制</a><a href="../sop/07_record_template.html">实验记录模板</a><a href="../resources/REFERENCES.html">官方资料与阅读路径</a><a href="../reports/VALIDATION.html">交付验证报告 · 2026-09-29</a></nav><main><h1 id="sop-05">SOP-05 · 验证与验收</h1>
+<h2 id="_1">软件层</h2>
+<p>执行 <code>run_tests('core')</code>；所有核心测试应 PASS。执行 <code>run_tests('all')</code>；所需协议生成与回环应 PASS。SKIP 列出未安装能力；FAIL 包含实际错误堆栈。</p>
+<p>本项目完整测试包含映射/Gray 邻接、RRC 定时、OFDM/DFT 逆变换、恒包络、CRC 已知向量、随机状态隔离、噪声方差、频偏方向、PSD 功率、二进制格式和协议默认预设等。</p>
+<h2 id="_2">协议层</h2>
+<table>
+<thead>
+<tr>
+<th>路线</th>
+<th>本版验收</th>
+<th>仍需另做</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>non-HT Wi-Fi</td>
+<td>已知定时、L-LTF 信道估计、PSDU 零误码</td>
+<td>未知 RF 包同步、有效 MAC、其他 Wi-Fi 代际接收</td>
+</tr>
+<tr>
+<td>BLE</td>
+<td>理想 PHY 四模式位恢复，默认广播 LL 成功</td>
+<td>真实 RF 同步、扩展广播/连接状态机</td>
+</tr>
+<tr>
+<td>经典蓝牙</td>
+<td>BR/EDR 波形生成与采样率检查</td>
+<td>接收解码、实际跳频连接</td>
+</tr>
+<tr>
+<td>Thread PHY</td>
+<td>MAC/FCS、已知 CRC、PPDU 时长</td>
+<td>独立无线接收、Thread 安全/入网</td>
+</tr>
+<tr>
+<td>LTE</td>
+<td>上下行参考波形生成、长度/采样率</td>
+<td>完整接收与传输块解码</td>
+</tr>
+<tr>
+<td>NR</td>
+<td>默认生成，低层 PDSCH/DM-RS/OFDM 位恢复</td>
+<td>默认编码链的端到端 LDPC/BLER、系统接入</td>
+</tr>
+</tbody>
+</table>
+<p>这张表是验证深度的声明，不能把右列尚未执行的测试记为通过。</p>
+<h2 id="_3">文件层</h2>
+<p>检查 float/int16 读回误差；按 <code>Nsample*8</code> 或 <code>Nsample*4</code> 核对每路文件大小。重采样/修改后重新生成参数清单，不复用旧 Fs。</p>
+<h2 id="_4">实验层</h2>
+<p>先单音，再标准波形，再目标失真。采集实际接收 IQ，比较相同口径的 EVM、PSD、包长、误码。若只测了频谱，不填写 BER 或互操作通过。</p>
+<h2 id="_5">完成标准</h2>
+<p>实验记录写明：已通过项目、跳过项目、已知限制、使用版本、原始输出目录、设备设置、结果图与下一步。所有结论能够追溯到实际运行输出。</p></main></div><footer>1.0.0 · 离线教程 · 运行状态以 reports/VALIDATION 与本机测试为准</footer></body></html>

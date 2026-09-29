@@ -1,0 +1,7 @@
+{
+  "Protocol": "ofdm",
+  "Modulation": "16QAM",
+  "Nfft": 256,
+  "Ncp": 32,
+  "Seed": 42
+}

@@ -1,0 +1,7 @@
+{
+  "Protocol": "wifi_he",
+  "BandwidthMHz": 20,
+  "MCS": 4,
+  "PayloadBytes": 1024,
+  "Seed": 42
+}

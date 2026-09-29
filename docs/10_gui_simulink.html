@@ -1,0 +1,42 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>10 · MATLAB 图形界面与 Simulink</title><style>
+:root{--ink:#172a3a;--muted:#5c6b78;--accent:#007d83;--line:#dce5ea;--paper:#fff}
+*{box-sizing:border-box}body{margin:0;background:#f1f5f7;color:var(--ink);font:16px/1.85 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+header{background:#142b3a;color:white;padding:24px 6vw;border-bottom:5px solid #20b7ab}header a{color:#96ede6;text-decoration:none}header .tag{font-size:12px;letter-spacing:2px;color:#adcad7}
+.layout{display:grid;grid-template-columns:250px minmax(0,980px);gap:28px;max-width:1330px;margin:32px auto;padding:0 24px}
+nav{position:sticky;top:20px;align-self:start;font-size:14px;max-height:90vh;overflow:auto}nav a{display:block;color:#435b6b;padding:5px 10px;text-decoration:none;border-left:2px solid transparent}nav a:hover{background:#e1eef0;border-color:var(--accent)}
+main{background:var(--paper);padding:40px 48px;border:1px solid var(--line);border-radius:10px;min-width:0}
+h1{font-size:30px;line-height:1.4;margin:0 0 24px}h2{font-size:23px;margin-top:38px;border-bottom:1px solid var(--line);padding-bottom:8px}h3{font-size:19px}a{color:#007b88}p{margin:14px 0}
+pre{padding:18px 20px;background:#122b39;color:#dff7f3;overflow:auto;border-radius:7px;line-height:1.65;font-size:13px}code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}p code,li code,td code{background:#eef3f5;padding:2px 5px;border-radius:3px;font-size:.9em}
+table{border-collapse:collapse;width:100%;font-size:14px;display:block;overflow:auto;margin:22px 0}th,td{border:1px solid var(--line);padding:10px 12px;vertical-align:top}th{background:#eaf3f5;text-align:left}tr:nth-child(even){background:#fafcfd}
+blockquote{border-left:4px solid var(--accent);margin-left:0;padding:2px 20px;background:#eef9f6}img{max-width:100%;height:auto}footer{padding:24px;color:var(--muted);font-size:13px;text-align:center}.toc{background:#f4f8f9;padding:10px 20px;border-radius:6px;font-size:14px}
+@media(max-width:900px){.layout{display:block;padding:0 12px}nav{position:static;max-height:180px;margin-bottom:18px}main{padding:25px 20px}h1{font-size:25px}}
+@media print{header,nav,footer,.toc{display:none}.layout{display:block;margin:0;padding:0}main{border:0;padding:0}pre{background:#eee;color:#111;white-space:pre-wrap}table{display:table;font-size:11px}h2,h3{break-after:avoid}img{max-height:85vh}}
+</style></head><body><header><div class="tag">SIMULATED MODULATION · MATLAB LAB</div><a href="../START_HERE.html">无线调制与波形实验室</a></header><div class="layout"><nav><a href="../README.html">无线调制与波形实验室 · Simulated Modulation</a><a href="../docs/00_start.html">00 · 从这里开始</a><a href="../docs/01_foundations.html">01 · IQ、采样和通信链路</a><a href="../docs/02_modulations.html">02 · 调制与脉冲成形</a><a href="../docs/03_ofdm_coding.html">03 · OFDM、编码与资源分配</a><a href="../docs/04_protocols.html">04 · Cellular、Wi-Fi、Bluetooth、Thread 的联系与区别</a><a href="../docs/05_recipes.html">05 · 参数配方与项目 API</a><a href="../docs/06_labs.html">06 · 15 个循序实验</a><a href="../docs/07_measurement.html">07 · 如何证明波形正确</a><a href="../docs/08_troubleshooting.html">08 · 排错手册</a><a href="../docs/09_advanced.html">09 · 进阶实验与扩展边界</a><a href="../docs/10_gui_simulink.html">10 · MATLAB 图形界面与 Simulink</a><a href="../docs/11_glossary_answers.html">11 · 术语、公式速查与练习答案</a><a href="../sop/01_install.html">SOP-01 · 环境安装与首次验收</a><a href="../sop/02_generate.html">SOP-02 · 生成一份可交付实验的 IQ</a><a href="../sop/03_change_parameters.html">SOP-03 · 修改参数与受控扫描</a><a href="../sop/04_instruments.html">SOP-04 · 从 IQ 文件到实验仪器</a><a href="../sop/05_validate.html">SOP-05 · 验证与验收</a><a href="../sop/06_reproducibility.html">SOP-06 · 复现、归档与版本控制</a><a href="../sop/07_record_template.html">实验记录模板</a><a href="../resources/REFERENCES.html">官方资料与阅读路径</a><a href="../reports/VALIDATION.html">交付验证报告 · 2026-09-29</a></nav><main><h1 id="10-matlab-simulink">10 · MATLAB 图形界面与 Simulink</h1>
+<h2 id="app">无线波形生成 App</h2>
+<p>如果你想先拖动参数观察变化，在 MATLAB 的 Apps 页面寻找 Wireless Waveform Generator。可生成的协议取决于已安装工具箱，较新的版本可能将 WLAN、5G、Bluetooth 分成专用 App。通过本机 <code>doc wirelessWaveformGenerator</code> 查看可用入口与界面。</p>
+<p>推荐操作：</p>
+<ol>
+<li>选择通用 QPSK，设置符号率、采样率和成形滤波。</li>
+<li>生成并看频谱、星座/时域；确认视图的坐标与单位。</li>
+<li>切换为目标协议，使用保守默认参数。</li>
+<li>找到 Export to MATLAB Script / Generate MATLAB Code 一类导出功能；具体名称随版本变化。</li>
+<li>将导出的脚本保存到自己的实验目录，核对其配置对象与本项目对应适配器。</li>
+<li>保存 IQ 和配置。App 截图不足以复现实验，导出的代码更重要。</li>
+</ol>
+<p>官方入口：<a href="https://www.mathworks.com/help/comm/ref/wirelesswaveformgenerator-app.html">Wireless Waveform Generator</a>。</p>
+<h2 id="simulink">本项目提供的 Simulink 模型</h2>
+<pre><code class="language-matlab">setup
+modelPath = build_simulink_model;
+open_system(modelPath)
+</code></pre>
+<p>函数创建并仿真 <code>generated/sm_iq_playback.slx</code>：</p>
+<pre><code class="language-text">From Workspace (complex IQ) ─┬─ Complex to Real-Imag ─ Scope (I,Q)
+                            └─ To Workspace (capture)
+</code></pre>
+<p>它将波形和时间序列保存在模型工作区，采用离散固定步长 <code>1/Fs</code>。模型只是离线 IQ 播放与观察，不包含实时射频或完整协议栈。建立模型需要本机 Simulink；交付环境没有 Simulink，所以此构建器的运行待本机验收。</p>
+<p>同名模型已经存在时脚本会停止，避免覆盖你修改的版本。若要重建，请另存旧模型或修改模型名称。</p>
+<h2 id="_1">下一步如何加模块</h2>
+<p>先加一个增益块验证幅度变化，再加延迟或噪声模块。凡是改变采样率、引入滤波或帧化的模块，都要核对信号维度、Sample time、帧长度和延迟。</p>
+<p>MATLAB Function 块不保证支持所有高级工具箱对象或动态配置；不要把任意离线脚本直接塞入代码生成环境。入门阶段以预生成 IQ 的 From Workspace 输入最容易定位问题。</p>
+<h2 id="matlab-online">MATLAB Online</h2>
+<p>将项目上传到 MATLAB Drive，切换到该目录后运行 <code>setup</code>。生成器与核心教程可以沿同一路线进行，但可用工具箱、存储额度、浏览器下载和硬件访问能力由在线环境决定。导出 IQ 后再转移到本地仪器工作站；不要把云端文件路径当成本机路径。</p></main></div><footer>1.0.0 · 离线教程 · 运行状态以 reports/VALIDATION 与本机测试为准</footer></body></html>

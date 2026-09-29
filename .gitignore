@@ -1,0 +1,13 @@
+generated/*
+!generated/README.md
+reports/environment.json
+reports/tests_*.json
+reports/run_*.json
+reports/figures/
+reports/lab*.png
+reports/lab*.mat
+*.asv
+slprj/
+*.slxc
+__pycache__/
+.DS_Store
